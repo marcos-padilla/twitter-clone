@@ -59,7 +59,7 @@ export default function UserPost() {
 			</Avatar>
 			<div className='flex-1 flex flex-col items-stretch gap-y-2'>
 				<textarea
-					className='focus:outline-none focus:ring-0 text-lg h-auto'
+					className='focus:outline-none focus:ring-0 text-lg h-auto bg-transparent'
 					placeholder={
 						poll ? 'Ask a question...' : "What's happening?"
 					}
