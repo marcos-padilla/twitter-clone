@@ -14,7 +14,7 @@ import { Avatar, AvatarFallback } from './ui/avatar'
 
 export default function PostCard() {
 	return (
-		<div className='border-b cursor-pointer hover:bg-accent transition-all duration-500 p-5'>
+		<div className='border-b cursor-pointer hover:bg-accent/20 transition-all duration-500 p-5'>
 			<div className='flex gap-x-5'>
 				<Avatar>
 					<AvatarFallback>MP</AvatarFallback>
