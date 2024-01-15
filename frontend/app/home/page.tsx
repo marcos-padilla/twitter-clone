@@ -1,3 +1,9 @@
+import UserPost from '@/components/UserPost'
+
 export default function Home() {
-	return <div>Hello World Page</div>
+	return (
+		<div className='flex flex-col items-stretch'>
+			<UserPost />
+		</div>
+	)
 }
