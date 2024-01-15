@@ -16,7 +16,7 @@ export const sidebarItems = [
 	},
 	{
 		name: 'Home',
-		path: '/',
+		path: '/home',
 		Icon: Home,
 	},
 	{
