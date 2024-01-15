@@ -1,3 +1,5 @@
+import HomeNavbar from '@/components/HomeNavbar'
+
 export default function Layout({
 	children,
 	info,
@@ -7,7 +9,10 @@ export default function Layout({
 }) {
 	return (
 		<div className='flex'>
-			<div className='flex-[2]'>{children}</div>
+			<div className='flex-[2] border-r'>
+				<HomeNavbar />
+				{children}
+			</div>
 			<div className='flex-1 lg:block hidden'>{info}</div>
 		</div>
 	)
