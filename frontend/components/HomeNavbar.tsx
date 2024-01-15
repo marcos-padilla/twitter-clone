@@ -25,7 +25,7 @@ export default function HomeNavbar() {
 				<button
 					key={feed.value}
 					className={cn(
-						'flex-1 flex justify-center items-center hover:bg-accent transition-all duration-500 cursor-pointer font-bold text-muted-foreground border-b-4 border-transparent',
+						'flex-1 flex justify-center items-center hover:bg-accent/50 transition-all duration-500 cursor-pointer font-bold text-muted-foreground border-b-4 border-transparent',
 						activeFeed === feed.value &&
 							'text-foreground border-primary'
 					)}
