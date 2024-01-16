@@ -1,9 +1,7 @@
+import ThemeProvider from '@/providers/ThemeProvider'
+import '@/styles/globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import '@/styles/globals.css'
-import Sidebar from '@/components/Sidebar'
-import { Toaster } from '@/components/ui/toaster'
-import ThemeProvider from '@/providers/ThemeProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,11 +23,7 @@ export default function RootLayout({
 					enableSystem
 					storageKey='twitter-theme'
 				>
-					<Toaster />
-					<Sidebar />
-					<main className='md:ml-52 ml-20 transition-all'>
-						{children}
-					</main>
+					{children}
 				</ThemeProvider>
 			</body>
 		</html>
