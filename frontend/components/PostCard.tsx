@@ -3,6 +3,7 @@ import {
 	BarChart2,
 	Bookmark,
 	Heart,
+	LucideIcon,
 	MessageCircle,
 	MoreHorizontal,
 	Repeat,
@@ -11,6 +12,27 @@ import {
 import Image from 'next/image'
 import ActionTooltip from './ActionTooltip'
 import { Avatar, AvatarFallback } from './ui/avatar'
+
+const PostAction = ({
+	label,
+	Icon,
+	count,
+}: {
+	label: string
+	Icon: LucideIcon
+	count?: number
+}) => {
+	return (
+		<ActionTooltip label={label} size='xs'>
+			<div className='flex items-center gap-x-2'>
+				<Icon size={20} />
+				{count && (
+					<span className='text-muted-foreground'>{count}</span>
+				)}
+			</div>
+		</ActionTooltip>
+	)
+}
 
 export default function PostCard() {
 	return (
@@ -64,45 +86,35 @@ export default function PostCard() {
 						/>
 					</div>
 					<div className='flex justify-between mt-5'>
-						<div className='flex items-center gap-x-2'>
-							<ActionTooltip label='Comments' size='xs'>
-								<MessageCircle size={20} />
-							</ActionTooltip>
-							<span className='text-muted-foreground'>
-								10
-							</span>
-						</div>
-						<div className='flex items-center gap-x-2'>
-							<ActionTooltip label='Repost' size='xs'>
-								<Repeat size={20} />
-							</ActionTooltip>
-							<span className='text-muted-foreground'>
-								10
-							</span>
-						</div>
-						<div className='flex items-center gap-x-2'>
-							<ActionTooltip label='Like' size='xs'>
-								<Heart size={20} />
-							</ActionTooltip>
-							<span className='text-muted-foreground'>
-								10
-							</span>
-						</div>
-						<div className='flex items-center gap-x-2'>
-							<ActionTooltip label='View' size='xs'>
-								<BarChart2 size={20} />
-							</ActionTooltip>
-							<span className='text-muted-foreground'>
-								10
-							</span>
-						</div>
+						<PostAction
+							label='Comment'
+							Icon={MessageCircle}
+							count={15}
+						/>
+						<PostAction
+							label='Repost'
+							Icon={Repeat}
+							count={52}
+						/>
+
+						<PostAction
+							label='Like'
+							Icon={Heart}
+							count={100}
+						/>
+
+						<PostAction
+							label='View'
+							Icon={BarChart2}
+							count={255}
+						/>
+
 						<div className='flex gap-x-2'>
-							<ActionTooltip label='Bookmark' size='xs'>
-								<Bookmark size={20} />
-							</ActionTooltip>
-							<ActionTooltip label='Share' size='xs'>
-								<Share size={20} />
-							</ActionTooltip>
+							<PostAction
+								label='Bookmark'
+								Icon={Bookmark}
+							/>
+							<PostAction label='Share' Icon={Share} />
 						</div>
 					</div>
 				</div>
