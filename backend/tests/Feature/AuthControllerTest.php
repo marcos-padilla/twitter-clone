@@ -130,7 +130,6 @@ class AuthControllerTest extends TestCase
             'email' => 'test@test.com',
             'password' => 'password'
         ]);
-        $response->dump();
         $response->assertStatus(200);
         $response->assertJsonStructure([
             'user' => [
