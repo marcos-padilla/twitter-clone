@@ -6,6 +6,8 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Models\Like;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -67,5 +69,26 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //
+    }
+
+    public function like(Request $request, Post $post)
+    {
+        $user = $request->user();
+
+        $existingLike = $post->likes()->where('user_id', $user->id)->first();
+
+        if ($existingLike) {
+            $existingLike->delete();
+            $message = 'Post unliked successfully';
+        } else {
+            $like = new Like();
+            $like->user_id = $user->id;
+            $post->likes()->save($like);
+            $message = 'Post liked successfully';
+        }
+
+        return response()->json([
+            'message' => $message,
+        ]);
     }
 }

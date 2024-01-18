@@ -190,4 +190,35 @@ class PostControllerTest extends TestCase
             'post_id' => $post->id,
         ]);
     }
+
+    public function test_can_like_post(): void
+    {
+        $user = User::factory()->create();
+        $post = Post::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->postJson('/api/posts/' . $post->id . '/like');
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'message' => 'Post liked successfully',
+        ]);
+    }
+
+    public function test_can_unlike_post(): void
+    {
+        $user = User::factory()->create();
+        $post = Post::factory()->create();
+        $post->likes()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->actingAs($user)
+            ->postJson('/api/posts/' . $post->id . '/like');
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'message' => 'Post unliked successfully',
+        ]);
+    }
 }

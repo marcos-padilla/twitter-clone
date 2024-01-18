@@ -22,7 +22,8 @@ Route::post('/sign-in', [AuthController::class, 'signIn']);
 Route::middleware('auth:sanctum')->group(function () {
      Route::post('/sign-out', [AuthController::class, 'signOut']);
 
+     Route::apiResource('/posts', PostController::class);
      Route::post('/posts/{post}/comments', [CommentController::class, 'store']);
      Route::delete('/posts/{post}/comments/{comment}', [CommentController::class, 'destroy']);
-     Route::apiResource('/posts', PostController::class);
+     Route::post('/posts/{post}/like', [PostController::class, 'like']);
 });
