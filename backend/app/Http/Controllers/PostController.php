@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCommentRequest;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
@@ -13,15 +14,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $posts = Post::with(['user', 'media', 'poll.questions'])->latest()->paginate(10);
+        return response()->json($posts);
     }
 
     /**
@@ -45,9 +39,9 @@ class PostController extends Controller
             $poll = $post->poll()->create($request->poll);
             $poll->questions()->createMany($request->poll['questions']);
         }
-        $return_post = Post::with(['user', 'media', 'poll.questions'])->find($post->id);
+        $post->load(['user', 'media', 'poll.questions']);
 
-        return response()->json($return_post, 201);
+        return response()->json($post, 201);
     }
 
     /**
@@ -55,15 +49,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
-    {
-        //
+        $post->load(['user', 'media', 'poll.questions', 'comments.user']);
+        return response()->json($post);
     }
 
     /**
@@ -80,5 +67,14 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //
+    }
+
+    public function addComment(StoreCommentRequest $request, Post $post)
+    {
+        $comment = $post->comments()->create([
+            'comment' => $request->comment,
+            'user_id' => $request->user()->id,
+        ]);
+        return response()->json($comment, 201);
     }
 }

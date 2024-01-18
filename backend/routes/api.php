@@ -21,5 +21,6 @@ Route::post('/sign-in', [AuthController::class, 'signIn']);
 Route::middleware('auth:sanctum')->group(function () {
      Route::post('/sign-out', [AuthController::class, 'signOut']);
 
+     Route::post('/posts/{post}/comments', [PostController::class, 'addComment']);
      Route::apiResource('/posts', PostController::class);
 });

@@ -22,13 +22,19 @@ class Post extends Model
         'is_sensitive' => 'boolean',
     ];
 
-    protected $append = [
-        'media'
+    protected $appends = [
+        'media',
+        'count_comment',
     ];
 
     public function media()
     {
         return $this->hasMany(Media::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 
     public function poll()
@@ -44,5 +50,10 @@ class Post extends Model
     public function getMediaAttribute()
     {
         return $this->media()->get();
+    }
+
+    public function getCountCommentAttribute()
+    {
+        return $this->comments()->count();
     }
 }
