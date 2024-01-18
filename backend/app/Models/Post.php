@@ -52,6 +52,11 @@ class Post extends Model
         return $this->hasMany(Like::class);
     }
 
+    public function hashtags()
+    {
+        return $this->belongsToMany(Hashtag::class);
+    }
+
     public function getMediaAttribute()
     {
         return $this->media()->get();
