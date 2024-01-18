@@ -7,10 +7,13 @@ import { Separator } from './ui/separator'
 import ActionTooltip from './ActionTooltip'
 import { CalendarClock, ImagePlus, List, LucideIcon, Smile } from 'lucide-react'
 import { Button } from './ui/button'
-import { cn } from '@/lib/utils'
+import { cn, getAvatarFallback } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { PollInput } from '@/types'
 import PollCard from './PollCard'
+import { useSession } from 'next-auth/react'
+import * as z from 'zod'
+import axios from 'axios'
 
 const MAX_POST_CONTENT = 100
 
@@ -52,10 +55,35 @@ const UserPostIcon = ({
 export default function UserPost() {
 	const [postContent, setPostContent] = useState('')
 	const [poll, setPoll] = useState<PollInput | null>(null)
+	const { data } = useSession()
+	const avatarFallback = getAvatarFallback(data?.user?.name)
+
+	const onSubmit = () => {
+		axios.post(
+			'http://127.0.0.1:8000/api/posts',
+			{
+				content: postContent,
+				poll: poll,
+			},
+			{
+				headers: {
+					//@ts-ignore
+					Authorization: `Bearer ${data?.apiToken}`,
+				},
+			}
+		)
+			.then((res) => {
+				setPostContent('')
+			})
+			.catch((e) => {
+				console.log({ e })
+			})
+	}
+
 	return (
 		<div className='border-b flex p-2 gap-x-2'>
 			<Avatar>
-				<AvatarFallback>MP</AvatarFallback>
+				<AvatarFallback>{avatarFallback}</AvatarFallback>
 			</Avatar>
 			<div className='flex-1 flex flex-col items-stretch gap-y-2'>
 				<textarea
@@ -147,7 +175,12 @@ export default function UserPost() {
 						>
 							{postContent.length} - {MAX_POST_CONTENT}
 						</div>
-						<Button className='rounded-full'>Post</Button>
+						<Button
+							className='rounded-full'
+							onClick={onSubmit}
+						>
+							Post
+						</Button>
 					</div>
 				</div>
 			</div>

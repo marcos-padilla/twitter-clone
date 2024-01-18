@@ -37,7 +37,7 @@ class PostController extends Controller
             $post->media()->createMany($request->media);
         }
 
-        if ($request->has('poll')) {
+        if ($request->has('poll') && $request->poll !== null) {
             $poll = $post->poll()->create($request->poll);
             $poll->questions()->createMany($request->poll['questions']);
         }

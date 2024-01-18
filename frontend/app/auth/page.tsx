@@ -50,9 +50,18 @@ const signUpFormSchema = z.object({
 		.min(8, { message: 'Password must be at least 8 characters' }),
 })
 
+const signInFormSchema = z.object({
+	email: z
+		.string()
+		.min(1, { message: 'Email is required' })
+		.email({ message: 'Invalid email address' }),
+	password: z.string().min(1, { message: 'Password is required' }),
+})
+
 export default function AuthPage() {
 	const { toast } = useToast()
 	const [openSignUp, setOpenSignUp] = useState(false)
+
 	const registerForm = useForm({
 		resolver: zodResolver(signUpFormSchema),
 		defaultValues: {
@@ -64,7 +73,15 @@ export default function AuthPage() {
 		},
 	})
 
-	const onSubmit = (data: z.infer<typeof signUpFormSchema>) => {
+	const signInForm = useForm({
+		resolver: zodResolver(signInFormSchema),
+		defaultValues: {
+			email: '',
+			password: '',
+		},
+	})
+
+	const onSignUp = (data: z.infer<typeof signUpFormSchema>) => {
 		axios.post('http://127.0.0.1:8000/api/sign-up', data)
 			.then(() => {
 				toast({
@@ -93,18 +110,71 @@ export default function AuthPage() {
 				}
 			})
 	}
+
+	const onSignIn = (data: z.infer<typeof signInFormSchema>) => {
+		try {
+			signIn('credentials', {
+				email: data.email,
+				password: data.password,
+				callbackUrl: '/home',
+			})
+		} catch (e) {
+			console.log({ e })
+		}
+	}
 	return (
 		<main className='flex flex-col justify-center items-center h-screen'>
 			<Card className='w-[400px]'>
 				<CardHeader>
 					<CardTitle>Sign In</CardTitle>
 				</CardHeader>
-				<CardContent className='space-y-5'>
-					<Input placeholder='Email, username or phone' />
-					<Input placeholder='Password' type='password' />
-					<div className='flex justify-end'>
-						<Button>Sign In</Button>
-					</div>
+				<CardContent>
+					<Form {...signInForm}>
+						<form
+							onSubmit={signInForm.handleSubmit(onSignIn)}
+							className='space-y-5'
+						>
+							<FormField
+								control={signInForm.control}
+								name='email'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Email</FormLabel>
+										<FormControl>
+											<Input
+												{...field}
+												placeholder='youremail@example.com'
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={signInForm.control}
+								name='password'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>
+											Password
+										</FormLabel>
+										<FormControl>
+											<Input
+												{...field}
+												placeholder='Password'
+												type='password'
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<div className='flex justify-end'>
+								<Button type='submit'>Sign In</Button>
+							</div>
+						</form>
+					</Form>
+
 					<div className='flex items-center'>
 						<Separator className='flex-1' />
 						<span className='mx-2'>or</span>
@@ -125,7 +195,7 @@ export default function AuthPage() {
 							<Form {...registerForm}>
 								<form
 									onSubmit={registerForm.handleSubmit(
-										onSubmit
+										onSignUp
 									)}
 									className='space-y-2'
 								>
