@@ -12,7 +12,6 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->only('signOut');
     }
 
     public function signUp(Request $request)
@@ -26,7 +25,7 @@ class AuthController extends Controller
 
         /** @var \App\Models\User */
         $user = User::create($attributes);
-        return response()->json($user);
+        return response()->json($user, 201);
     }
 
     public function signIn(Request $request)
@@ -46,7 +45,7 @@ class AuthController extends Controller
                 'token' => $token
             ]);
         }
-        return response(['message' => 'Invalid Credenntials'], 401);
+        return response(['message' => 'Invalid Credentials'], 401);
     }
 
     public function signOut(Request $request)
