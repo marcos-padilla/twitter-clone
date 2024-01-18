@@ -68,13 +68,4 @@ class PostController extends Controller
     {
         //
     }
-
-    public function addComment(StoreCommentRequest $request, Post $post)
-    {
-        $comment = $post->comments()->create([
-            'comment' => $request->comment,
-            'user_id' => $request->user()->id,
-        ]);
-        return response()->json($comment, 201);
-    }
 }

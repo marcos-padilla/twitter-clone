@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,7 @@ Route::post('/sign-in', [AuthController::class, 'signIn']);
 Route::middleware('auth:sanctum')->group(function () {
      Route::post('/sign-out', [AuthController::class, 'signOut']);
 
-     Route::post('/posts/{post}/comments', [PostController::class, 'addComment']);
+     Route::post('/posts/{post}/comments', [CommentController::class, 'store']);
+     Route::delete('/posts/{post}/comments/{comment}', [CommentController::class, 'destroy']);
      Route::apiResource('/posts', PostController::class);
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use App\Models\Post;
 
 class CommentController extends Controller
 {
@@ -27,9 +28,13 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCommentRequest $request)
+    public function store(StoreCommentRequest $request, Post $post)
     {
-        //
+        $comment = $post->comments()->create([
+            'comment' => $request->comment,
+            'user_id' => $request->user()->id,
+        ]);
+        return response()->json($comment, 201);
     }
 
     /**
@@ -59,8 +64,17 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(Post $post, Comment $comment)
     {
-        //
+        $this->authorize('delete', $comment);
+        if ($comment->post_id !== $post->id) {
+            return response()->json([
+                'message' => 'Comment does not belong to post'
+            ], 403);
+        }
+        $comment->delete();
+        return response()->json([
+            'message' => 'Comment deleted successfully'
+        ]);
     }
 }
