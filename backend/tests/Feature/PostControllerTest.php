@@ -2,14 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\Models\Post;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class PostControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
     /**
      * Test the store method.
      *
@@ -145,6 +147,47 @@ class PostControllerTest extends TestCase
         ]);
         $this->assertDatabaseHas('polls', [
             'post_id' => $response->json('id'),
+        ]);
+    }
+    public function test_can_show_post(): void
+    {
+        $user = User::factory()->create();
+        $post = Post::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->getJson('/api/posts/' . $post->id);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'id' => $post->id,
+            'user' => [
+                'id' => $post->user->id,
+            ],
+            'media' => [],
+            'poll' => null,
+            'comments' => [],
+        ]);
+    }
+
+    public function test_user_can_comment(): void
+    {
+        $user = User::factory()->create();
+        $post = Post::factory()->create();
+        $commentData = [
+            'comment' => 'This is a test comment',
+        ];
+
+        $response = $this->actingAs($user)
+            ->postJson('/api/posts/' . $post->id . '/comments', $commentData);
+
+        $response->assertStatus(201);
+        $response->assertJson([
+            'comment' => 'This is a test comment',
+        ]);
+        $this->assertDatabaseHas('comments', [
+            'comment' => 'This is a test comment',
+            'user_id' => $user->id,
+            'post_id' => $post->id,
         ]);
     }
 }
