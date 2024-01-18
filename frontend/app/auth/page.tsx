@@ -23,9 +23,13 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@/components/ui/form'
+import axios from 'axios'
+import { useToast } from '@/components/ui/use-toast'
+import { useState } from 'react'
+import { signIn } from 'next-auth/react'
 
 const signUpFormSchema = z.object({
-	fullName: z.string().min(1, { message: 'Full name is required' }),
+	name: z.string().min(1, { message: 'Full name is required' }),
 	username: z
 		.string()
 		.min(1, { message: 'Username is required' })
@@ -41,25 +45,53 @@ const signUpFormSchema = z.object({
 	password: z
 		.string()
 		.min(8, { message: 'Password must be at least 8 characters' }),
-	confirmPassword: z
+	password_confirmation: z
 		.string()
 		.min(8, { message: 'Password must be at least 8 characters' }),
 })
 
 export default function AuthPage() {
+	const { toast } = useToast()
+	const [openSignUp, setOpenSignUp] = useState(false)
 	const registerForm = useForm({
 		resolver: zodResolver(signUpFormSchema),
 		defaultValues: {
-			fullName: '',
+			name: '',
 			username: '',
 			email: '',
 			password: '',
-			confirmPassword: '',
+			password_confirmation: '',
 		},
 	})
 
 	const onSubmit = (data: z.infer<typeof signUpFormSchema>) => {
-		console.log(data)
+		axios.post('http://127.0.0.1:8000/api/sign-up', data)
+			.then(() => {
+				toast({
+					title: 'Sign Up Success!!!',
+					description:
+						'Enjoy your new account. Please check your email to verify your account.',
+				})
+				signIn('credentials', {
+					email: data.email,
+					password: data.password,
+					callbackUrl: '/home',
+				})
+			})
+			.catch((e) => {
+				if (e.response.status === 422) {
+					Object.entries(e.response.data.errors).forEach(
+						([key, value]) => {
+							registerForm.setError(
+								key as keyof typeof data,
+								{
+									message: (value as string[])[0],
+								}
+							)
+						}
+					)
+				}
+			})
 	}
 	return (
 		<main className='flex flex-col justify-center items-center h-screen'>
@@ -78,7 +110,7 @@ export default function AuthPage() {
 						<span className='mx-2'>or</span>
 						<Separator className='flex-1' />
 					</div>
-					<Dialog>
+					<Dialog open={openSignUp} onOpenChange={setOpenSignUp}>
 						<DialogTrigger asChild>
 							<Button className='w-full rounded-full'>
 								Create an account
@@ -99,7 +131,7 @@ export default function AuthPage() {
 								>
 									<FormField
 										control={registerForm.control}
-										name='fullName'
+										name='name'
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
@@ -189,7 +221,7 @@ export default function AuthPage() {
 									/>
 									<FormField
 										control={registerForm.control}
-										name='confirmPassword'
+										name='password_confirmation'
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>

@@ -1,3 +1,5 @@
+import { Toaster } from '@/components/ui/toaster'
+import SessionProvider from '@/providers/SessionProvider'
 import ThemeProvider from '@/providers/ThemeProvider'
 import '@/styles/globals.css'
 import type { Metadata } from 'next'
@@ -17,14 +19,17 @@ export default function RootLayout({
 	return (
 		<html lang='en'>
 			<body className={inter.className}>
-				<ThemeProvider
-					attribute='class'
-					defaultTheme='dark'
-					enableSystem
-					storageKey='twitter-theme'
-				>
-					{children}
-				</ThemeProvider>
+				<SessionProvider>
+					<ThemeProvider
+						attribute='class'
+						defaultTheme='dark'
+						enableSystem
+						storageKey='twitter-theme'
+					>
+						<Toaster />
+						{children}
+					</ThemeProvider>
+				</SessionProvider>
 			</body>
 		</html>
 	)

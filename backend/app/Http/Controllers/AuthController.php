@@ -4,13 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+
+    public function __construct()
     {
-        $request->validate([
+        $this->middleware('auth:sanctum')->only('signOut');
+    }
+
+    public function signUp(Request $request)
+    {
+        $attributes = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:20|unique:users,username',
             'email' => 'required|string|email|max:255|unique:users,email',
@@ -18,20 +25,33 @@ class AuthController extends Controller
         ]);
 
         /** @var \App\Models\User */
-        $user = User::create([
-            'name' => $request->name,
-            'username' => $request->username,
-            'avatar_path' => $request->avatar_path,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+        $user = User::create($attributes);
+        return response()->json($user);
+    }
+
+    public function signIn(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string']
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response([
-            'user' => $user,
-            'token' => $token,
-            'message' => 'Registration successful',
-        ], 201);
+        if (Auth::attempt($credentials)) {
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+            $token = $user->createToken('auth-token')->plainTextToken;
+            return response()->json([
+                'user' => $user,
+                'token' => $token
+            ]);
+        }
+        return response(['message' => 'Invalid Credenntials'], 401);
+    }
+
+    public function signOut(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json(['message' => 'Signed out']);
     }
 }

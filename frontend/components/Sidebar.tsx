@@ -2,7 +2,9 @@
 
 import { sidebarItems } from '@/lib/constants'
 import SidebarItem from './SidebarItem'
-import { X } from 'lucide-react'
+import { LogOut, X } from 'lucide-react'
+import { Button } from './ui/button'
+import { signOut } from 'next-auth/react'
 
 export default function Sidebar() {
 	return (
@@ -10,6 +12,15 @@ export default function Sidebar() {
 			{sidebarItems.map((item, index) => (
 				<SidebarItem key={index} item={item} />
 			))}
+			<div className='mt-auto mb-4'>
+				<Button
+					onClick={() => {
+						signOut({ callbackUrl: '/auth' })
+					}}
+				>
+					<LogOut />
+				</Button>
+			</div>
 		</aside>
 	)
 }
