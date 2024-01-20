@@ -3,6 +3,7 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { getServerSession } from 'next-auth'
 import axios from 'axios'
+import { revalidatePath } from 'next/cache'
 
 export const serverSession = async () => {
 	return await getServerSession(authOptions)
@@ -34,4 +35,17 @@ export const sendRequest = async (
 export const getPosts = async (page: number = 1) => {
 	const res = await sendRequest('GET', `/posts?page=${page}`)
 	return res.data
+}
+
+export const postComment = async (formData: FormData) => {
+	try {
+		const postId = formData.get('post_id')
+		const comment = formData.get('comment')
+		const res = await sendRequest('POST', `/posts/${postId}/comments`, {
+			comment,
+		})
+		return res.data
+	} catch (e) {
+		revalidatePath('/')
+	}
 }

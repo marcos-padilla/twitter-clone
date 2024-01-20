@@ -1,3 +1,5 @@
+'use client'
+
 import {
 	Dialog,
 	DialogContent,
@@ -5,16 +7,20 @@ import {
 	DialogHeader,
 	DialogTrigger,
 } from '@/components/ui/dialog'
+import { postComment } from '@/lib/actions'
 import { PostWithUser } from '@/types'
 import { BadgeCheck, MessageCircle } from 'lucide-react'
+import { useState } from 'react'
 import ActionTooltip from '../ActionTooltip'
 import UserAvatar from '../UserAvatar'
 import { Button } from '../ui/button'
 import { ScrollArea } from '../ui/scroll-area'
 
 export default function CommentPostDialog({ post }: { post: PostWithUser }) {
+	const [countComment, setCountComment] = useState(post.count_comment)
+	const [isOpen, setIsOpen] = useState(false)
 	return (
-		<Dialog>
+		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
 				<div>
 					<ActionTooltip label={'Comment'} size='xs'>
@@ -23,7 +29,7 @@ export default function CommentPostDialog({ post }: { post: PostWithUser }) {
 								<MessageCircle size={20} />
 							</div>
 							<span className='text-muted-foreground group-hover:text-primary transition-all duration-300'>
-								{post.count_comment}
+								{countComment}
 							</span>
 						</div>
 					</ActionTooltip>
@@ -64,24 +70,44 @@ export default function CommentPostDialog({ post }: { post: PostWithUser }) {
 							</div>
 							<div className='flex gap-x-2'>
 								<UserAvatar name={'Test'} />
-								<ScrollArea className='max-h-[400px] w-full'>
-									<textarea
-										className='focus:outline-none focus:ring-0 text-lg h-auto bg-transparent w-full'
-										placeholder={
-											'Post your comment'
-										}
-										onInput={(e) => {
-											e.currentTarget.style.height =
-												'auto'
-											e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`
-										}}
+								<form
+									action={postComment}
+									className='w-full space-y-2'
+								>
+									<input
+										type='hidden'
+										name='post_id'
+										value={post.id}
 									/>
-								</ScrollArea>
-							</div>
-							<div className='flex justify-end'>
-								<Button className='rounded-full'>
-									Comment
-								</Button>
+									<ScrollArea className='max-h-[400px] w-full'>
+										<textarea
+											className='focus:outline-none focus:ring-0 text-lg h-auto bg-transparent w-full'
+											name='comment'
+											placeholder={
+												'Post your comment'
+											}
+											onInput={(e) => {
+												e.currentTarget.style.height =
+													'auto'
+												e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`
+											}}
+										/>
+									</ScrollArea>
+									<div className='flex justify-end'>
+										<Button
+											className='rounded-full'
+											onClick={() => {
+												setCountComment(
+													countComment +
+														1
+												)
+												setIsOpen(false)
+											}}
+										>
+											Comment
+										</Button>
+									</div>
+								</form>
 							</div>
 						</div>
 					</DialogDescription>
