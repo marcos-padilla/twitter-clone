@@ -1,6 +1,6 @@
 import Posts from '@/components/posts/Posts'
 import PostsSkeleton from '@/components/skeleton/PostsSkeleton'
-import UserPost from '@/components/UserPost'
+import UserPost from '@/components/user-post/UserPost'
 import { Suspense } from 'react'
 
 export default async function Home() {

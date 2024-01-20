@@ -6,15 +6,16 @@ import axios from 'axios'
 import { CalendarClock, ImagePlus, List, LucideIcon, Smile } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
-import ActionTooltip from './ActionTooltip'
-import PollCard from './PollCard'
-import ReplayToPostPopover from './ReplayToPostPopover'
-import UserAvatar from './UserAvatar'
-import { Button } from './ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
-import { Separator } from './ui/separator'
+import ActionTooltip from '../ActionTooltip'
+import PollCard from '../PollCard'
+import ReplayToPostPopover from '../ReplayToPostPopover'
+import UserAvatar from '../UserAvatar'
+import { Button } from '../ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
+import { Separator } from '../ui/separator'
+import ProgressiveCircularBar from './ProgressiveCircularBar'
 
-const MAX_POST_CONTENT = 100
+const MAX_POST_CONTENT = 200
 
 const UserPostIcon = ({
 	onClick,
@@ -158,25 +159,18 @@ export default function UserPost() {
 						/>
 					</div>
 					<div className='flex items-stretch gap-x-2'>
-						<div
-							className={cn(
-								'border-r-2 pr-2 flex items-center text-muted-foreground text-xs',
-								postContent.length >
-									MAX_POST_CONTENT - 20 &&
-									'text-orange-500',
-								postContent.length >
-									MAX_POST_CONTENT - 5 &&
-									'text-red-700'
-							)}
-						>
-							{postContent.length} - {MAX_POST_CONTENT}
+						<ProgressiveCircularBar
+							actual={postContent.length}
+							limit={MAX_POST_CONTENT}
+						/>
+						<div className='flex items-center'>
+							<Button
+								className='rounded-full'
+								onClick={onSubmit}
+							>
+								Post
+							</Button>
 						</div>
-						<Button
-							className='rounded-full'
-							onClick={onSubmit}
-						>
-							Post
-						</Button>
 					</div>
 				</div>
 			</div>
