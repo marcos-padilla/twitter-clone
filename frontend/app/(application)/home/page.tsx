@@ -1,7 +1,6 @@
-import { getPosts } from '@/actions/getPosts'
-import PostCard from '@/components/PostCard'
+import InfiniteScrollPosts from '@/components/InfiniteScrollPosts'
 import UserPost from '@/components/UserPost'
-import { PostWithUser } from '@/types'
+import { getPosts } from '@/lib/actions'
 
 export default async function Home() {
 	const posts = await getPosts()
@@ -9,9 +8,10 @@ export default async function Home() {
 	return (
 		<div className='flex flex-col items-stretch'>
 			<UserPost />
-			{posts.data.map((post: PostWithUser) => {
-				return <PostCard key={post.id} post={post} />
-			})}
+			<InfiniteScrollPosts
+				initialPosts={posts.data}
+				lastPage={posts.last_page}
+			/>
 		</div>
 	)
 }
