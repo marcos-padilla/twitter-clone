@@ -89,28 +89,46 @@ export default function PostCard({ post }: { post: PostWithUser }) {
 					)}
 					<div className='flex justify-between mt-5'>
 						<div className='flex space-x-8'>
-							<PostAction
-								label='Comment'
-								Icon={MessageCircle}
-								count={post.count_comment}
-							/>
-							<PostAction
-								label='Repost'
-								Icon={Repeat}
-								count={52}
-							/>
-
-							<PostAction
-								label='Like'
-								Icon={Heart}
-								count={100}
-							/>
-
-							<PostAction
-								label='View'
-								Icon={BarChart2}
-								count={255}
-							/>
+							<ActionTooltip label={'Comment'} size='xs'>
+								<div className='flex items-center gap-x-[1px] group'>
+									<div className='group-hover:bg-primary/20 group-hover:text-primary p-1 rounded-full transition-all duration-300'>
+										<MessageCircle size={20} />
+									</div>
+									<span className='text-muted-foreground group-hover:text-primary transition-all duration-300'>
+										{post.count_comment}
+									</span>
+								</div>
+							</ActionTooltip>
+							<ActionTooltip label={'Repost'} size='xs'>
+								<div className='flex items-center gap-x-[1px] group'>
+									<div className='group-hover:bg-green-500/20 group-hover:text-green-500 p-1 rounded-full transition-all duration-300'>
+										<Repeat size={20} />
+									</div>
+									<span className='text-muted-foreground group-hover:text-green-500 transition-all duration-300'>
+										{52}
+									</span>
+								</div>
+							</ActionTooltip>
+							<ActionTooltip label={'Like'} size='xs'>
+								<div className='flex items-center gap-x-[1px] group'>
+									<div className='group-hover:bg-red-500/20 group-hover:text-red-500 p-1 rounded-full transition-all duration-300'>
+										<Heart size={20} />
+									</div>
+									<span className='text-muted-foreground group-hover:text-red-500 transition-all duration-300'>
+										{100}
+									</span>
+								</div>
+							</ActionTooltip>
+							<ActionTooltip label={'View'} size='xs'>
+								<div className='flex items-center gap-x-[1px] group'>
+									<div className='group-hover:bg-purple-500/20 group-hover:text-purple-500 p-1 rounded-full transition-all duration-300'>
+										<BarChart2 size={20} />
+									</div>
+									<span className='text-muted-foreground group-hover:text-purple-500 transition-all duration-300'>
+										{255}
+									</span>
+								</div>
+							</ActionTooltip>
 						</div>
 
 						<div className='flex gap-x-2'>
