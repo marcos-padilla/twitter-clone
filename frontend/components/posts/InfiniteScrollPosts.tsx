@@ -43,10 +43,9 @@ export default function InfiniteScrollPosts({
 			{posts.map((post: PostWithUser, index) => {
 				if (index === posts.length - 2) {
 					return (
-						<>
-							<div ref={ref} />
-							<PostCard key={post.id} post={post} />
-						</>
+						<div key={post.id} ref={ref}>
+							<PostCard post={post} />
+						</div>
 					)
 				}
 				return <PostCard key={post.id} post={post} />
