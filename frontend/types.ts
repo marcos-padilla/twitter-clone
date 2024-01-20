@@ -33,12 +33,14 @@ export type Question = {
 	id: number
 	poll_id: number
 	question: string
+	count_votes: number
 	created_at: string
 	updated_at: string
 }
 
 export type Poll = {
 	id: number
+	user_selection: number
 	post_id: number
 	questions: Question[]
 	created_at: string

@@ -91,4 +91,37 @@ class PostController extends Controller
             'message' => $message,
         ]);
     }
+
+    public function vote(Request $request, Post $post)
+    {
+        $user = $request->user();
+        $poll = $post->poll;
+        if (!$poll) {
+            return response()->json([
+                'message' => 'Post does not have a poll',
+            ], 422);
+        }
+
+        $request->validate([
+            'vote' => 'required|integer|exists:questions,id',
+        ]);
+
+        // Check if this user already voted in this poll
+        $existingVote = $poll->votes()->where('user_id', $user->id)->first();
+        if ($existingVote) {
+            $existingVote->update([
+                'question_id' => $request->vote,
+            ]);
+        } else {
+            $poll->votes()->create([
+                'user_id' => $user->id,
+                'question_id' => $request->vote,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Voted successfully',
+            'poll' => $poll->load('questions'),
+        ]);
+    }
 }

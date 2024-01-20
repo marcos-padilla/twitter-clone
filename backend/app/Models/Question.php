@@ -14,8 +14,22 @@ class Question extends Model
         'question',
     ];
 
+    protected $appends = [
+        'count_votes'
+    ];
+
     public function poll()
     {
         return $this->belongsTo(Poll::class);
+    }
+
+    public function votes()
+    {
+        return $this->hasMany(Vote::class);
+    }
+
+    public function getCountVotesAttribute()
+    {
+        return $this->votes()->count();
     }
 }

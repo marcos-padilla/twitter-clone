@@ -14,8 +14,9 @@ class Poll extends Model
         'question',
     ];
 
-    protected $append = [
-        'questions'
+    protected $appends = [
+        'questions',
+        'user_selection'
     ];
 
     public function post()
@@ -26,6 +27,21 @@ class Poll extends Model
     public function questions()
     {
         return $this->hasMany(Question::class);
+    }
+
+    public function votes()
+    {
+        return $this->hasManyThrough(Vote::class, Question::class);
+    }
+
+    public function getUserSelectionAttribute()
+    {
+        $userSelection = $this->votes()->where('user_id', auth()->id())->first();
+        if ($userSelection) {
+            return $userSelection->question_id;
+        } else {
+            return -1;
+        }
     }
 
     public function getQuestionsAttribute()

@@ -37,8 +37,6 @@ const PostAction = ({
 }
 
 export default function PostCard({ post }: { post: PostWithUser }) {
-	console.log({ post })
-
 	return (
 		<div className='border-b cursor-pointer hover:bg-accent/10 transition-all duration-700 p-5'>
 			<div className='flex gap-x-5'>
@@ -77,7 +75,12 @@ export default function PostCard({ post }: { post: PostWithUser }) {
 							<MoreHorizontal size={20} />
 						</ActionTooltip>
 					</div>
-					{post.poll && <PollQuestions poll={post.poll} />}
+					{post.poll && (
+						<PollQuestions
+							poll={post.poll}
+							postId={post.id}
+						/>
+					)}
 					{post.media.length > 0 && (
 						<div className='flex justify-center'>
 							<Image
