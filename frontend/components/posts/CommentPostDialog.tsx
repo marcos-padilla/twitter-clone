@@ -15,10 +15,12 @@ import ActionTooltip from '../ActionTooltip'
 import UserAvatar from '../UserAvatar'
 import { Button } from '../ui/button'
 import { ScrollArea } from '../ui/scroll-area'
+import { useSession } from 'next-auth/react'
 
 export default function CommentPostDialog({ post }: { post: PostWithUser }) {
 	const [countComment, setCountComment] = useState(post.count_comment)
 	const [isOpen, setIsOpen] = useState(false)
+	const { data } = useSession()
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
@@ -69,7 +71,10 @@ export default function CommentPostDialog({ post }: { post: PostWithUser }) {
 								</div>
 							</div>
 							<div className='flex gap-x-2'>
-								<UserAvatar name={'Test'} />
+								<UserAvatar
+									name={data?.user?.name}
+									image={data?.user?.image}
+								/>
 								<form
 									action={postComment}
 									className='w-full space-y-2'
