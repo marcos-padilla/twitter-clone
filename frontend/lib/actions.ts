@@ -4,6 +4,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { getServerSession } from 'next-auth'
 import axios from 'axios'
 import { revalidatePath } from 'next/cache'
+import { PollInput } from '@/types'
 
 export const serverSession = async () => {
 	return await getServerSession(authOptions)
@@ -20,7 +21,7 @@ export const sendRequest = async (
 	const token = session?.apiToken
 
 	const res = await axios.request({
-		url: `http://127.0.0.1:8000/api${url}`,
+		url: `${process.env.NEXT_PUBLIC_API_URL}${url}`,
 		method,
 		data: body,
 		headers: {
@@ -35,6 +36,18 @@ export const sendRequest = async (
 export const getPosts = async (page: number = 1) => {
 	const res = await sendRequest('GET', `/posts?page=${page}`)
 	return res.data
+}
+
+export const post = async (content: string, poll: PollInput | null) => {
+	try {
+		const res = await sendRequest('POST', '/posts', {
+			content,
+			poll,
+		})
+		return res
+	} catch (e) {
+		return e
+	}
 }
 
 export const postComment = async (formData: FormData) => {

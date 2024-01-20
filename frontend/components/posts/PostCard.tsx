@@ -13,6 +13,7 @@ import ActionTooltip from '../ActionTooltip'
 import UserAvatar from '../UserAvatar'
 import CommentPostDialog from './CommentPostDialog'
 import LikePostButton from './LikePostButton'
+import PollQuestions from './PollQuestions'
 
 const PostAction = ({
 	label,
@@ -36,6 +37,8 @@ const PostAction = ({
 }
 
 export default function PostCard({ post }: { post: PostWithUser }) {
+	console.log({ post })
+
 	return (
 		<div className='border-b cursor-pointer hover:bg-accent/10 transition-all duration-700 p-5'>
 			<div className='flex gap-x-5'>
@@ -74,6 +77,7 @@ export default function PostCard({ post }: { post: PostWithUser }) {
 							<MoreHorizontal size={20} />
 						</ActionTooltip>
 					</div>
+					{post.poll && <PollQuestions poll={post.poll} />}
 					{post.media.length > 0 && (
 						<div className='flex justify-center'>
 							<Image

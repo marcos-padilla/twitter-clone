@@ -25,11 +25,12 @@ export default function PollCard({
 					<div className='flex items-center gap-x-2' key={index}>
 						<Input
 							key={index}
-							value={question}
+							value={question.question}
 							onChange={(e) => {
 								const newPoll = { ...poll }
-								newPoll.questions[index] =
-									e.target.value
+								newPoll.questions[index] = {
+									question: e.target.value,
+								}
 								setPoll(newPoll)
 							}}
 							placeholder={`Choice ${index + 1}`}
@@ -71,7 +72,9 @@ export default function PollCard({
 									})
 								} else {
 									const newPoll = { ...poll }
-									newPoll.questions.push('')
+									newPoll.questions.push({
+										question: '',
+									})
 									setPoll(newPoll)
 								}
 							}}

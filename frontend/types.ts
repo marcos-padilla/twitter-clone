@@ -1,9 +1,12 @@
 import { sidebarItems } from './lib/constants'
 
 export type SidebarItem = (typeof sidebarItems)[number]
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
 export type PollInput = {
-	questions: string[]
+	questions: {
+		question: string
+	}[]
 	pollLength: {
 		days: number
 		hours: number
@@ -26,7 +29,21 @@ export type User = {
 
 export type Media = {}
 
-export type Poll = {}
+export type Question = {
+	id: number
+	poll_id: number
+	question: string
+	created_at: string
+	updated_at: string
+}
+
+export type Poll = {
+	id: number
+	post_id: number
+	questions: Question[]
+	created_at: string
+	updated_at: string
+}
 
 export type Post = {
 	id: number

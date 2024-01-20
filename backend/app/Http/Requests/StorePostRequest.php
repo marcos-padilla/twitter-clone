@@ -22,7 +22,7 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => ['string', 'max:500'],
+            'content' => ['required', 'string', 'max:500'],
             'reply' => ['string', 'in:everyone,follow,verified,mention'],
             'scheduled_at' => ['date', 'after:now'],
             'is_pinned' => ['boolean'],
