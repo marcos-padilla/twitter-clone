@@ -1,19 +1,18 @@
 'use client'
 
-import { useState } from 'react'
-import ReplayToPostPopover from './ReplayToPostPopover'
-import { Avatar, AvatarFallback } from './ui/avatar'
-import { Separator } from './ui/separator'
-import ActionTooltip from './ActionTooltip'
-import { CalendarClock, ImagePlus, List, LucideIcon, Smile } from 'lucide-react'
-import { Button } from './ui/button'
-import { cn, getAvatarFallback } from '@/lib/utils'
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
+import { cn } from '@/lib/utils'
 import { PollInput } from '@/types'
-import PollCard from './PollCard'
-import { useSession } from 'next-auth/react'
-import * as z from 'zod'
 import axios from 'axios'
+import { CalendarClock, ImagePlus, List, LucideIcon, Smile } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import { useState } from 'react'
+import ActionTooltip from './ActionTooltip'
+import PollCard from './PollCard'
+import ReplayToPostPopover from './ReplayToPostPopover'
+import UserAvatar from './UserAvatar'
+import { Button } from './ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
+import { Separator } from './ui/separator'
 
 const MAX_POST_CONTENT = 100
 
@@ -56,7 +55,6 @@ export default function UserPost() {
 	const [postContent, setPostContent] = useState('')
 	const [poll, setPoll] = useState<PollInput | null>(null)
 	const { data } = useSession()
-	const avatarFallback = getAvatarFallback(data?.user?.name)
 
 	const onSubmit = () => {
 		axios.post(
@@ -82,9 +80,7 @@ export default function UserPost() {
 
 	return (
 		<div className='border-b flex p-2 gap-x-2'>
-			<Avatar>
-				<AvatarFallback>{avatarFallback}</AvatarFallback>
-			</Avatar>
+			<UserAvatar name={data?.user?.name} image={data?.user?.image} />
 			<div className='flex-1 flex flex-col items-stretch gap-y-2'>
 				<textarea
 					className='focus:outline-none focus:ring-0 text-lg h-auto bg-transparent'

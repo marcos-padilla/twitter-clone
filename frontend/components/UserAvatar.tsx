@@ -5,12 +5,12 @@ export default function UserAvatar({
 	name,
 	image,
 }: {
-	name: string
-	image?: string | null
+	name: string | null | undefined
+	image?: string | null | undefined
 }) {
 	return (
 		<Avatar>
-			<AvatarImage src={image || ''} alt={name} />
+			<AvatarImage src={image || ''} alt={name || ''} />
 			<AvatarFallback>{getAvatarFallback(name)}</AvatarFallback>
 		</Avatar>
 	)

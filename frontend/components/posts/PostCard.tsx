@@ -1,19 +1,18 @@
+import { PostWithUser } from '@/types'
 import {
 	BadgeCheck,
 	BarChart2,
 	Bookmark,
 	Heart,
 	LucideIcon,
-	MessageCircle,
 	MoreHorizontal,
 	Repeat,
 	Share,
 } from 'lucide-react'
 import Image from 'next/image'
 import ActionTooltip from '../ActionTooltip'
-import { Avatar, AvatarFallback } from '../ui/avatar'
-import { PostWithUser } from '@/types'
-import { getAvatarFallback } from '@/lib/utils'
+import UserAvatar from '../UserAvatar'
+import CommentPostDialog from './CommentPostDialog'
 
 const PostAction = ({
 	label,
@@ -38,13 +37,12 @@ const PostAction = ({
 
 export default function PostCard({ post }: { post: PostWithUser }) {
 	return (
-		<div className='border-b cursor-pointer hover:bg-accent/20 transition-all duration-500 p-5'>
+		<div className='border-b cursor-pointer hover:bg-accent/10 transition-all duration-700 p-5'>
 			<div className='flex gap-x-5'>
-				<Avatar>
-					<AvatarFallback>
-						{getAvatarFallback(post.user.name)}
-					</AvatarFallback>
-				</Avatar>
+				<UserAvatar
+					name={post.user.name}
+					image={post.user.avatar_path}
+				/>
 				<div className='flex flex-col flex-1'>
 					<div className='flex justify-between'>
 						<div className='flex flex-col'>
@@ -89,16 +87,7 @@ export default function PostCard({ post }: { post: PostWithUser }) {
 					)}
 					<div className='flex justify-between mt-5'>
 						<div className='flex space-x-8'>
-							<ActionTooltip label={'Comment'} size='xs'>
-								<div className='flex items-center gap-x-[1px] group'>
-									<div className='group-hover:bg-primary/20 group-hover:text-primary p-1 rounded-full transition-all duration-300'>
-										<MessageCircle size={20} />
-									</div>
-									<span className='text-muted-foreground group-hover:text-primary transition-all duration-300'>
-										{post.count_comment}
-									</span>
-								</div>
-							</ActionTooltip>
+							<CommentPostDialog post={post} />
 							<ActionTooltip label={'Repost'} size='xs'>
 								<div className='flex items-center gap-x-[1px] group'>
 									<div className='group-hover:bg-green-500/20 group-hover:text-green-500 p-1 rounded-full transition-all duration-300'>
