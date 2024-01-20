@@ -5,7 +5,6 @@ import { PostWithUser } from '@/types'
 
 export default async function Home() {
 	const posts = await getPosts()
-	console.log({ posts })
 
 	return (
 		<div className='flex flex-col items-stretch'>
