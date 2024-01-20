@@ -27,7 +27,9 @@ export default function PollQuestions({
 			)
 			const percents = dynamicPoll.questions.map(
 				(question: Question) => {
-					return (question.count_votes / totalVotes) * 100
+					return Math.round(
+						(question.count_votes / totalVotes) * 100
+					)
 				}
 			)
 			setPercents(percents)
