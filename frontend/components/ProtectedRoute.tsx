@@ -9,7 +9,7 @@ export default function ProtectedRoute({
 }: {
 	children: React.ReactNode
 }) {
-	const { status } = useSession()
+	/* const { status } = useSession()
 	const router = useRouter()
 
 	useEffect(() => {
@@ -18,6 +18,6 @@ export default function ProtectedRoute({
 		}
 	}, [status, router])
 	if (status === 'loading' || status === 'unauthenticated')
-		return <div>Loading...</div>
+		return <div>Loadsing...</div> */
 	return children
 }

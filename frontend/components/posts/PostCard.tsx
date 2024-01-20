@@ -10,8 +10,8 @@ import {
 	Share,
 } from 'lucide-react'
 import Image from 'next/image'
-import ActionTooltip from './ActionTooltip'
-import { Avatar, AvatarFallback } from './ui/avatar'
+import ActionTooltip from '../ActionTooltip'
+import { Avatar, AvatarFallback } from '../ui/avatar'
 import { PostWithUser } from '@/types'
 import { getAvatarFallback } from '@/lib/utils'
 
