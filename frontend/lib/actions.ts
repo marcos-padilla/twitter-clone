@@ -49,3 +49,15 @@ export const postComment = async (formData: FormData) => {
 		revalidatePath('/')
 	}
 }
+
+export const likePost = async (formData: FormData) => {
+	try {
+		const postId = formData.get('post_id')
+		const res = await sendRequest('POST', `/posts/${postId}/like`)
+		return res.data
+	} catch (e) {
+		console.log(e)
+
+		revalidatePath('/')
+	}
+}

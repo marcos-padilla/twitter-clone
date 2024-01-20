@@ -3,7 +3,6 @@ import {
 	BadgeCheck,
 	BarChart2,
 	Bookmark,
-	Heart,
 	LucideIcon,
 	MoreHorizontal,
 	Repeat,
@@ -13,6 +12,7 @@ import Image from 'next/image'
 import ActionTooltip from '../ActionTooltip'
 import UserAvatar from '../UserAvatar'
 import CommentPostDialog from './CommentPostDialog'
+import LikePostButton from './LikePostButton'
 
 const PostAction = ({
 	label,
@@ -98,16 +98,11 @@ export default function PostCard({ post }: { post: PostWithUser }) {
 									</span>
 								</div>
 							</ActionTooltip>
-							<ActionTooltip label={'Like'} size='xs'>
-								<div className='flex items-center gap-x-[1px] group'>
-									<div className='group-hover:bg-red-500/20 group-hover:text-red-500 p-1 rounded-full transition-all duration-300'>
-										<Heart size={20} />
-									</div>
-									<span className='text-muted-foreground group-hover:text-red-500 transition-all duration-300'>
-										{100}
-									</span>
-								</div>
-							</ActionTooltip>
+							<LikePostButton
+								isLikedByUser={post.is_liked}
+								countLikes={post.count_like}
+								id={post.id}
+							/>
 							<ActionTooltip label={'View'} size='xs'>
 								<div className='flex items-center gap-x-[1px] group'>
 									<div className='group-hover:bg-purple-500/20 group-hover:text-purple-500 p-1 rounded-full transition-all duration-300'>

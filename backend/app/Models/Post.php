@@ -26,6 +26,8 @@ class Post extends Model
     protected $appends = [
         'media',
         'count_comment',
+        'count_like',
+        'is_liked'
     ];
 
     public function media()
@@ -66,5 +68,15 @@ class Post extends Model
     public function getCountCommentAttribute()
     {
         return $this->comments()->count();
+    }
+
+    public function getCountLikeAttribute()
+    {
+        return $this->likes()->count();
+    }
+
+    public function getIsLikedAttribute()
+    {
+        return $this->likes()->where('user_id', auth()->user()->id)->exists();
     }
 }

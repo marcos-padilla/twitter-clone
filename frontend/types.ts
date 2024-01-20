@@ -40,6 +40,9 @@ export type Post = {
 	updated_at: string
 	media: Media[]
 	count_comment: number
+	count_like: number
+	count_repost: number
+	is_liked: boolean
 	poll: Poll | null
 }
 
