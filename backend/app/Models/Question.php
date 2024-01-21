@@ -50,6 +50,9 @@ class Question extends Model
         $totalVotes = $poll->questions->flatMap(function ($question) {
             return $question->votes;
         })->count();
+        if ($totalVotes === 0) {
+            return 0;
+        }
         $percentageVotes = round(($this->votes()->count() / $totalVotes) * 100, 2);
         return $percentageVotes;
     }

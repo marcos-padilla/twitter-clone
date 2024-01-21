@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PollController;
 use App\Http\Controllers\PostController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,5 +26,5 @@ Route::middleware('auth:sanctum')->group(function () {
      Route::post('/posts/{post}/comments', [CommentController::class, 'store']);
      Route::delete('/posts/{post}/comments/{comment}', [CommentController::class, 'destroy']);
      Route::post('/posts/{post}/like', [PostController::class, 'like']);
-     Route::post('/posts/{post}/vote', [PostController::class, 'vote']);
+     Route::post('/polls/{poll}/vote', [PollController::class, 'vote']);
 });

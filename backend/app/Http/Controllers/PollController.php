@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Poll;
 use App\Http\Requests\StorePollRequest;
 use App\Http\Requests\UpdatePollRequest;
+use Illuminate\Http\Request;
 
 class PollController extends Controller
 {
@@ -29,7 +30,6 @@ class PollController extends Controller
      */
     public function store(StorePollRequest $request)
     {
-        //
     }
 
     /**
@@ -62,5 +62,31 @@ class PollController extends Controller
     public function destroy(Poll $poll)
     {
         //
+    }
+
+    public function vote(Request $request, Poll $poll)
+    {
+        $request->validate([
+            'question_id' => 'required|integer|exists:questions,id',
+        ]);
+        $user = $request->user();
+
+        // Check if this user already voted in this poll
+        $existingVote = $poll->votes()->where('user_id', $user->id)->first();
+        if ($existingVote) {
+            $existingVote->update([
+                'question_id' => $request->question_id,
+            ]);
+        } else {
+            $poll->votes()->create([
+                'user_id' => $user->id,
+                'question_id' => $request->question_id,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Voted successfully',
+            'poll' => $poll->load('questions'),
+        ]);
     }
 }
