@@ -17,8 +17,8 @@ class AuthControllerTest extends TestCase
     {
         $response = $this->postJson('/api/sign-up', [
             'name' => 'Test User',
-            'email' => 'test@test.com',
-            'username' => 'test',
+            'email' => 'test_from_phpunit@test.com',
+            'username' => 'test_from_phpunit',
             'password' => 'password',
             'password_confirmation' => 'password'
         ]);
@@ -35,14 +35,14 @@ class AuthControllerTest extends TestCase
 
         $response->assertJson([
             'name' => 'Test User',
-            'email' => 'test@test.com',
-            'username' => 'test',
+            'email' => 'test_from_phpunit@test.com',
+            'username' => 'test_from_phpunit',
         ]);
 
         $this->assertDatabaseHas('users', [
             'name' => 'Test User',
-            'email' => 'test@test.com',
-            'username' => 'test',
+            'email' => 'test_from_phpunit@test.com',
+            'username' => 'test_from_phpunit',
         ]);
     }
 
@@ -120,13 +120,13 @@ class AuthControllerTest extends TestCase
     {
         $user = User::create([
             'name' => 'Test User',
-            'email' => 'test@test.com',
+            'email' => 'test_from_phpunit@test.com',
             'password' => 'password',
-            'username' => 'test'
+            'username' => 'test_from_phpunit'
         ]);
 
         $response = $this->postJson('/api/sign-in', [
-            'email' => 'test@test.com',
+            'email' => 'test_from_phpunit@test.com',
             'password' => 'password'
         ]);
         $response->assertStatus(200);
@@ -146,7 +146,7 @@ class AuthControllerTest extends TestCase
     public function test_cannot_sign_in_with_invalid_credentials(): void
     {
         $response = $this->postJson('/api/sign-in', [
-            'email' => 'test@test.com',
+            'email' => 'test_from_phpunit@test.com',
             'password' => 'wrong_password'
         ]);
 
