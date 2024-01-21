@@ -75,12 +75,7 @@ export default function PostCard({ post }: { post: PostWithUser }) {
 							<MoreHorizontal size={20} />
 						</ActionTooltip>
 					</div>
-					{post.poll && (
-						<PollQuestions
-							poll={post.poll}
-							postId={post.id}
-						/>
-					)}
+					{post.poll && <PollQuestions poll={post.poll} />}
 					{post.media.length > 0 && (
 						<div className='flex justify-center'>
 							<Image

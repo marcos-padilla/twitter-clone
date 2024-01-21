@@ -74,3 +74,10 @@ export const likePost = async (formData: FormData) => {
 		revalidatePath('/')
 	}
 }
+
+export const vote = async (pollId: number, questionId: number) => {
+	const res = await sendRequest('POST', `/polls/${pollId}/vote`, {
+		question_id: questionId,
+	})
+	return res.data
+}
