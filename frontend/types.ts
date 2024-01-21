@@ -34,6 +34,7 @@ export type Question = {
 	poll_id: number
 	question: string
 	count_votes: number
+	percentage_votes: number
 	created_at: string
 	updated_at: string
 }

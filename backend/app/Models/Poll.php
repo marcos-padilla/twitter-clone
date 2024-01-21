@@ -16,7 +16,8 @@ class Poll extends Model
 
     protected $appends = [
         'questions',
-        'user_selection'
+        'user_selection',
+        'count_votes'
     ];
 
     public function post()
@@ -47,5 +48,10 @@ class Poll extends Model
     public function getQuestionsAttribute()
     {
         return $this->questions()->get();
+    }
+
+    public function getCountVotesAttribute()
+    {
+        return $this->votes()->count();
     }
 }
