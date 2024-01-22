@@ -5,12 +5,13 @@ namespace Tests\Feature;
 use App\Models\Poll;
 use App\Models\Question;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class PollControllerTest extends TestCase
 {
+
+    use DatabaseTransactions;
 
     public function test_user_can_vote(): void
     {
