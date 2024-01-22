@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PollController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
@@ -31,4 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
      Route::post('/follow/{user}', [FollowController::class, 'follow']);
      Route::delete('/follow/{user}', [FollowController::class, 'unfollow']);
+
+     Route::post('/message/{user}', [MessageController::class, 'sendMessage']);
+     Route::get('/message/{user}', [MessageController::class, 'index']);
 });
