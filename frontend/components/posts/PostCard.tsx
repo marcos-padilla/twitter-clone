@@ -14,6 +14,7 @@ import UserAvatar from '../UserAvatar'
 import CommentPostDialog from './CommentPostDialog'
 import LikePostButton from './LikePostButton'
 import PollQuestions from './PollQuestions'
+import UserTooltip from '../UserTooltip'
 
 const PostAction = ({
 	label,
@@ -48,18 +49,7 @@ export default function PostCard({ post }: { post: PostWithUser }) {
 					<div className='flex justify-between'>
 						<div className='flex flex-col'>
 							<div className='flex items-center gap-x-2 text-xs'>
-								<span className='font-bold hover:underline flex'>
-									{post.user.name}
-									<span className='text-primary'>
-										<BadgeCheck
-											size={13}
-											strokeWidth={3}
-										/>
-									</span>
-								</span>
-								<span className='text-muted-foreground'>
-									@{post.user.username}
-								</span>
+								<UserTooltip user={post.user} />
 								<span>-</span>
 								<span className='text-muted-foreground'>
 									1h
