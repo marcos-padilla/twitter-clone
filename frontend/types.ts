@@ -23,6 +23,8 @@ export type User = {
 	username: string
 	email_verified_at: string | null
 	avatar_path: string | null
+	count_following: number
+	count_followers: number
 	created_at: string
 	updated_at: string
 }
