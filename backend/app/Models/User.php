@@ -50,6 +50,7 @@ class User extends Authenticatable
     protected $appends = [
         'count_following',
         'count_followers',
+        'is_following'
     ];
 
     public function setPasswordAttribute($value)
@@ -105,6 +106,14 @@ class User extends Authenticatable
     public function getCountFollowersAttribute()
     {
         return $this->followers()->count();
+    }
+
+    public function getIsFollowingAttribute()
+    {
+        if (auth()->check()) {
+            return $this->isFollowing(auth()->user());
+        }
+        return false;
     }
 
     public function sentMessages()
