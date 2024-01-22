@@ -84,4 +84,31 @@ class FollowControllerTest extends TestCase
 
         $response->assertStatus(409);
     }
+
+
+    public function test_user_cannot_follow_themselves(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->postJson("/api/follow/$user->id");
+
+        $response->assertStatus(409)
+            ->assertJson([
+                'message' => "You can't follow yourself",
+            ]);
+    }
+
+    public function test_user_cannot_unfollow_themselves(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->deleteJson("/api/follow/$user->id");
+
+        $response->assertStatus(409)
+            ->assertJson([
+                'message' => "You can't unfollow yourself",
+            ]);
+    }
 }

@@ -13,6 +13,11 @@ class FollowController extends Controller
          * @var \App\Models\User
          */
         $authUser = $request->user();
+
+        if ($authUser->id === $user->id) {
+            return response(['message' => "You can't follow yourself"], 409);
+        }
+
         if ($authUser->isFollowing($user)) {
             return response(null, 409);
         }
@@ -29,6 +34,11 @@ class FollowController extends Controller
          * @var \App\Models\User
          */
         $authUser = $request->user();
+
+        if ($authUser->id === $user->id) {
+            return response(['message' => "You can't unfollow yourself"], 409);
+        }
+
         if (!$authUser->isFollowing($user)) {
             return response(null, 409);
         }
