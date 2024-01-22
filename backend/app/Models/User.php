@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -83,7 +84,7 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'follows', 'follows_id', 'user_id');
     }
 
-    public function isFollowing(User $user)
+    public function isFollowing(User $user): bool
     {
         return $this->following->contains($user);
     }
@@ -111,7 +112,7 @@ class User extends Authenticatable
     public function getIsFollowingAttribute()
     {
         if (auth()->check()) {
-            return $this->isFollowing(auth()->user());
+            return DB::table('follows')->where('user_id', auth()->user()->id)->where('follows_id', $this->id)->exists();
         }
         return false;
     }
