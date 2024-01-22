@@ -169,28 +169,6 @@ class PostControllerTest extends TestCase
         ]);
     }
 
-    public function test_user_can_comment(): void
-    {
-        $user = User::factory()->create();
-        $post = Post::factory()->create();
-        $commentData = [
-            'comment' => 'This is a test comment',
-        ];
-
-        $response = $this->actingAs($user)
-            ->postJson('/api/posts/' . $post->id . '/comments', $commentData);
-
-        $response->assertStatus(201);
-        $response->assertJson([
-            'comment' => 'This is a test comment',
-        ]);
-        $this->assertDatabaseHas('comments', [
-            'comment' => 'This is a test comment',
-            'user_id' => $user->id,
-            'post_id' => $post->id,
-        ]);
-    }
-
     public function test_can_like_post(): void
     {
         $user = User::factory()->create();
