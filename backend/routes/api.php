@@ -6,6 +6,7 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PollController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,11 +25,18 @@ Route::post('/sign-in', [AuthController::class, 'signIn']);
 Route::middleware('auth:sanctum')->group(function () {
      Route::post('/sign-out', [AuthController::class, 'signOut']);
 
+     Route::get('/user', [UserController::class, 'me']);
+     Route::get('/user/{user}', [UserController::class, 'show']);
+     Route::put('/user', [UserController::class, 'update']);
+     Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
+
      Route::apiResource('/posts', PostController::class);
+     Route::post('/posts/{post}/like', [PostController::class, 'like']);
+
+     Route::post('/polls/{poll}/vote', [PollController::class, 'vote']);
+
      Route::post('/posts/{post}/comments', [CommentController::class, 'store']);
      Route::delete('/posts/{post}/comments/{comment}', [CommentController::class, 'destroy']);
-     Route::post('/posts/{post}/like', [PostController::class, 'like']);
-     Route::post('/polls/{poll}/vote', [PollController::class, 'vote']);
 
      Route::post('/follow/{user}', [FollowController::class, 'follow']);
      Route::delete('/follow/{user}', [FollowController::class, 'unfollow']);
