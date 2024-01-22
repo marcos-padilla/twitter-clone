@@ -25,6 +25,7 @@ export type User = {
 	avatar_path: string | null
 	count_following: number
 	count_followers: number
+	is_following: boolean
 	created_at: string
 	updated_at: string
 }
