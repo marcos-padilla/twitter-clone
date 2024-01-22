@@ -171,8 +171,8 @@ export default function UserPost() {
 														(
 															prev
 														) => [
-															...prev,
 															res,
+															...prev,
 														]
 													)
 													setPostContent(
