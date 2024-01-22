@@ -33,7 +33,7 @@ export default function UserTooltip({ user: userProp }: { user: User }) {
 						</span>
 					</div>
 				</TooltipTrigger>
-				<TooltipContent className='w-[300px] p-4 cursor-default'>
+				<TooltipContent className='w-[300px] p-4 cursor-default shadow-md shadow-black/20 dark:shadow-white/20'>
 					<div className='flex flex-col gap-y-5'>
 						<div className='flex items-start justify-between'>
 							<UserAvatar
