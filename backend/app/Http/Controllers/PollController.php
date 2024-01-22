@@ -69,9 +69,12 @@ class PollController extends Controller
         $request->validate([
             'question_id' => 'required|integer|exists:questions,id',
         ]);
+
+        /**
+         * @var \App\Models\User $user
+         */
         $user = $request->user();
 
-        // Check if this user already voted in this poll
         $existingVote = $poll->votes()->where('user_id', $user->id)->first();
         if ($existingVote) {
             $existingVote->update([
