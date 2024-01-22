@@ -81,3 +81,13 @@ export const vote = async (pollId: number, questionId: number) => {
 	})
 	return res.data
 }
+
+export const followUser = async (userId: number) => {
+	const res = await sendRequest('POST', `/follow/${userId}`)
+	return res.data
+}
+
+export const unfollowUser = async (userId: number) => {
+	const res = await sendRequest('DELETE', `/follow/${userId}`)
+	return res.data
+}

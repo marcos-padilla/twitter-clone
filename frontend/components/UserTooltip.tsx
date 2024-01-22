@@ -1,3 +1,5 @@
+'use client'
+
 import { User } from '@/types'
 import { BadgeCheck } from 'lucide-react'
 import {
@@ -8,8 +10,13 @@ import {
 } from './ui/tooltip'
 import UserAvatar from './UserAvatar'
 import { Button } from './ui/button'
+import { followUser, unfollowUser } from '@/lib/actions'
+import { useSession } from 'next-auth/react'
+import { useState } from 'react'
 
-export default function UserTooltip({ user }: { user: User }) {
+export default function UserTooltip({ user: userProp }: { user: User }) {
+	const { data } = useSession()
+	const [user, setUser] = useState<User>(userProp)
 	return (
 		<TooltipProvider>
 			<Tooltip>
@@ -34,20 +41,59 @@ export default function UserTooltip({ user }: { user: User }) {
 								image={user.avatar_path}
 								size='lg'
 							/>
-							{/* <Button className='rounded-full bg-foreground text-background hover:bg-primary/20 hover:text-primary transition-all'>
-								Follow
-							</Button> */}
-							<Button
-								variant={'outline'}
-								className='rounded-full text-foreground hover:bg-destructive/20 hover:text-red-500 hover:border-red-500 transition-all group'
-							>
-								<span className='group-hover:hidden'>
-									Following
-								</span>
-								<span className='hidden group-hover:block'>
-									Unfollow
-								</span>
-							</Button>
+
+							{
+								//@ts-ignore
+								data?.user.id !== user.id && (
+									<div>
+										{user.is_following ? (
+											<Button
+												variant={'outline'}
+												className='rounded-full text-foreground hover:bg-destructive/20 hover:text-red-500 hover:border-red-500 transition-all group'
+												onClick={() => {
+													unfollowUser(
+														user.id
+													)
+													setUser({
+														...user,
+														is_following:
+															false,
+														count_followers:
+															user.count_followers -
+															1,
+													})
+												}}
+											>
+												<span className='group-hover:hidden'>
+													Following
+												</span>
+												<span className='hidden group-hover:block'>
+													Unfollow
+												</span>
+											</Button>
+										) : (
+											<Button
+												className='rounded-full bg-foreground text-background hover:bg-primary/20 hover:text-primary transition-all'
+												onClick={() => {
+													followUser(
+														user.id
+													)
+													setUser({
+														...user,
+														is_following:
+															true,
+														count_followers:
+															user.count_followers +
+															1,
+													})
+												}}
+											>
+												Follow
+											</Button>
+										)}
+									</div>
+								)
+							}
 						</div>
 						<div className='flex flex-col'>
 							<div className='flex items-center gap-x-1'>
@@ -74,7 +120,7 @@ export default function UserTooltip({ user }: { user: User }) {
 						<div className='flex items-center justify-around'>
 							<div className='flex items-center gap-x-2'>
 								<span className='text-foreground font-medium'>
-									0
+									{user.count_following}
 								</span>
 								<span className='text-muted-foreground'>
 									Following
@@ -82,7 +128,7 @@ export default function UserTooltip({ user }: { user: User }) {
 							</div>
 							<div className='flex items-center gap-x-2'>
 								<span className='text-foreground font-medium'>
-									0
+									{user.count_followers}
 								</span>
 								<span className='text-muted-foreground'>
 									Followers
