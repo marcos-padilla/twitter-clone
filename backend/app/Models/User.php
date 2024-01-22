@@ -46,6 +46,12 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+
+    protected $appends = [
+        'count_following',
+        'count_followers',
+    ];
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
@@ -89,5 +95,15 @@ class User extends Authenticatable
     public function unfollow(User $user)
     {
         return $this->following()->detach($user);
+    }
+
+    public function getCountFollowingAttribute()
+    {
+        return $this->following()->count();
+    }
+
+    public function getCountFollowersAttribute()
+    {
+        return $this->followers()->count();
     }
 }

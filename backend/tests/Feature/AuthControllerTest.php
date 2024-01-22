@@ -30,7 +30,9 @@ class AuthControllerTest extends TestCase
             'username',
             'created_at',
             'updated_at',
-            'id'
+            'id',
+            'count_following',
+            'count_followers',
         ]);
 
         $response->assertJson([
