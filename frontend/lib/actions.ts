@@ -39,15 +39,11 @@ export const getPosts = async (page: number = 1) => {
 }
 
 export const post = async (content: string, poll: PollInput | null) => {
-	try {
-		const res = await sendRequest('POST', '/posts', {
-			content,
-			poll,
-		})
-		return res
-	} catch (e) {
-		return e
-	}
+	const res = await sendRequest('POST', '/posts', {
+		content,
+		poll,
+	})
+	return res.data
 }
 
 export const postComment = async (formData: FormData) => {

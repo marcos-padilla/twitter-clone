@@ -15,6 +15,7 @@ import { Button } from '../ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Separator } from '../ui/separator'
 import ProgressiveCircularBar from './ProgressiveCircularBar'
+import { post } from '@/lib/actions'
 
 const MAX_POST_CONTENT = 200
 
@@ -57,7 +58,6 @@ export default function UserPost() {
 	const [postContent, setPostContent] = useState('')
 	const [poll, setPoll] = useState<PollInput | null>(null)
 	const { data } = useSession()
-	const { data: res, loading, error, send } = useRequest()
 	const [dinamicPosts, setDinamicPosts] = useState<PostWithUser[]>([])
 
 	return (
@@ -157,35 +157,25 @@ export default function UserPost() {
 								<Button
 									className='rounded-full'
 									onClick={async () => {
-										send({
-											url: '/posts',
-											method: 'POST',
-											body: {
-												content: postContent,
-												poll,
-											},
-										})
-											.then((res) => {
-												if (res) {
-													setDinamicPosts(
-														(
-															prev
-														) => [
-															res,
-															...prev,
-														]
-													)
-													setPostContent(
-														''
-													)
-													setPoll(null)
-												}
-											})
-											.catch((e) => {
-												console.log({ e })
-											})
+										try {
+											const res = await post(
+												postContent,
+												poll
+											)
+											if (res) {
+												setDinamicPosts(
+													(prev) => [
+														res,
+														...prev,
+													]
+												)
+												setPostContent('')
+												setPoll(null)
+											}
+										} catch (e) {
+											console.log({ e })
+										}
 									}}
-									disabled={loading}
 								>
 									Post
 								</Button>
