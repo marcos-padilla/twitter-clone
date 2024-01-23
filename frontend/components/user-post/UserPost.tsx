@@ -1,10 +1,11 @@
 'use client'
 
-import { useRequest } from '@/hooks/useRequest'
+import { axiosInstance } from '@/lib/axiosInstance'
 import { cn } from '@/lib/utils'
 import { PollInput, PostWithUser } from '@/types'
 import { CalendarClock, ImagePlus, List, LucideIcon, Smile } from 'lucide-react'
 import { useSession } from 'next-auth/react'
+import Image from 'next/image'
 import { useState } from 'react'
 import ActionTooltip from '../ActionTooltip'
 import PollCard from '../PollCard'
@@ -14,10 +15,8 @@ import PostCard from '../posts/PostCard'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Separator } from '../ui/separator'
-import ProgressiveCircularBar from './ProgressiveCircularBar'
-import { post } from '@/lib/actions'
-import Image from 'next/image'
 import { useToast } from '../ui/use-toast'
+import ProgressiveCircularBar from './ProgressiveCircularBar'
 
 const MAX_POST_CONTENT = 200
 
@@ -72,6 +71,35 @@ export default function UserPost() {
 	const [dinamicPosts, setDinamicPosts] = useState<PostWithUser[]>([])
 	const [mediaFiles, setMediaFiles] = useState<File[]>([])
 	const { toast } = useToast()
+
+	const onSubmit = async () => {
+		const postData = {
+			content: postContent,
+			poll,
+		}
+		mediaFiles.forEach((file, index) => {
+			//@ts-ignore
+			postData[`imagen${index + 1}`] = file
+		})
+		axiosInstance
+			.post('/posts', postData, {
+				headers: {
+					//@ts-ignore
+					Authorization: `Bearer ${data?.apiToken}`,
+					'Content-Type': 'multipart/form-data',
+				},
+			})
+			.then((res) => {
+				setPostContent('')
+				setMediaFiles([])
+				setPoll(null)
+				setDinamicPosts((prev) => [res.data, ...prev])
+			})
+			.catch((e) => {
+				console.log(e)
+			})
+	}
+
 	return (
 		<>
 			<div className='border-b flex p-2 gap-x-2'>
@@ -255,27 +283,7 @@ export default function UserPost() {
 							<div className='flex items-center'>
 								<Button
 									className='rounded-full'
-									onClick={async () => {
-										try {
-											const res = await post(
-												postContent,
-												poll,
-												mediaFiles
-											)
-											if (res) {
-												setDinamicPosts(
-													(prev) => [
-														res,
-														...prev,
-													]
-												)
-												setPostContent('')
-												setPoll(null)
-											}
-										} catch (e) {
-											console.log({ e })
-										}
-									}}
+									onClick={onSubmit}
 								>
 									Post
 								</Button>

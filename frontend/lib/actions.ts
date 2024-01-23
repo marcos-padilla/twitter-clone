@@ -38,26 +38,6 @@ export const getPosts = async (page: number = 1) => {
 	return res.data
 }
 
-export const post = async (
-	content: string,
-	poll: PollInput | null,
-	media: File[] | null
-) => {
-	const res = await sendRequest(
-		'POST',
-		'/posts',
-		{
-			content,
-			poll,
-			media,
-		},
-		{
-			'Content-Type': 'multipart/form-data',
-		}
-	)
-	return res.data
-}
-
 export const postComment = async (formData: FormData) => {
 	try {
 		const postId = formData.get('post_id')
