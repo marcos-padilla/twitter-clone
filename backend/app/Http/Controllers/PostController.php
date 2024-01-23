@@ -8,6 +8,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Like;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -27,14 +28,24 @@ class PostController extends Controller
     {
         $post = $request->user()->posts()->create($request->validated());
 
-        if ($request->has('poll') && $request->has('media')) {
+        if ($request->has('poll') && $request->has('imagen1')) {
             return response()->json([
                 'message' => 'Post cannot have media and poll'
             ], 422);
         }
 
-        if ($request->has('media')) {
-            $post->media()->createMany($request->media);
+        if ($request->has('imagen1')) {
+            $media = $request->file();
+            foreach ($media as $key => $imagen) {
+                $imagen_name = time() . '_' . $imagen->getClientOriginalName();
+                $storage =  Storage::disk('public')->put($imagen_name, $imagen);
+                $url = asset('storage/' . $storage);
+
+                $post->media()->create([
+                    'path' => $url,
+                    'type' => 'image'
+                ]);
+            }
         }
 
         if ($request->has('poll') && $request->poll !== null) {

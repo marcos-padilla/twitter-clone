@@ -5,9 +5,8 @@ namespace Tests\Feature;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Illuminate\Http\UploadedFile;
 
 class PostControllerTest extends TestCase
 {
@@ -66,12 +65,7 @@ class PostControllerTest extends TestCase
         $postData = [
             'content' => 'This is a test post',
             'reply' => 'everyone',
-            'media' => [
-                [
-                    'type' => 'image',
-                    'path' => 'https://example.com/image.png',
-                ],
-            ],
+            'imagen1' => 'https://example.com/image.png',
             'poll' => [
                 'question' => 'This is a test poll',
                 'options' => [
@@ -95,12 +89,7 @@ class PostControllerTest extends TestCase
         $postData = [
             'content' => 'This is a test post',
             'reply' => 'everyone',
-            'media' => [
-                [
-                    'type' => 'image',
-                    'path' => 'https://example.com/image.png',
-                ],
-            ],
+            'imagen1' =>  UploadedFile::fake()->image('avatar.jpg'),
         ];
 
         $response = $this->actingAs($user)
@@ -111,7 +100,7 @@ class PostControllerTest extends TestCase
             'reply' => 'everyone',
         ]);
         $this->assertDatabaseHas('media', [
-            'path' => 'https://example.com/image.png',
+            'post_id' => $response->json('id'),
         ]);
     }
 

@@ -259,7 +259,8 @@ export default function UserPost() {
 										try {
 											const res = await post(
 												postContent,
-												poll
+												poll,
+												mediaFiles
 											)
 											if (res) {
 												setDinamicPosts(
