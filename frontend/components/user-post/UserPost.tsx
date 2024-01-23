@@ -16,8 +16,27 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Separator } from '../ui/separator'
 import ProgressiveCircularBar from './ProgressiveCircularBar'
 import { post } from '@/lib/actions'
+import Image from 'next/image'
+import { useToast } from '../ui/use-toast'
 
 const MAX_POST_CONTENT = 200
+
+const Wrapper = ({
+	children,
+	disabled,
+	label,
+}: {
+	children: React.ReactNode
+	disabled: boolean
+	label: string
+}) => {
+	if (disabled) return <>{children}</>
+	return (
+		<ActionTooltip label={label} size='xs'>
+			{children}
+		</ActionTooltip>
+	)
+}
 
 const UserPostIcon = ({
 	onClick,
@@ -30,16 +49,8 @@ const UserPostIcon = ({
 	disabled: boolean
 	Icon: LucideIcon
 }) => {
-	const Wrapper = ({ children }: { children: React.ReactNode }) => {
-		if (disabled) return <>{children}</>
-		return (
-			<ActionTooltip label={label} size='xs'>
-				{children}
-			</ActionTooltip>
-		)
-	}
 	return (
-		<Wrapper>
+		<Wrapper disabled={disabled} label={label}>
 			<button
 				onClick={onClick}
 				className={cn(
@@ -59,7 +70,8 @@ export default function UserPost() {
 	const [poll, setPoll] = useState<PollInput | null>(null)
 	const { data } = useSession()
 	const [dinamicPosts, setDinamicPosts] = useState<PostWithUser[]>([])
-
+	const [mediaFiles, setMediaFiles] = useState<File[]>([])
+	const { toast } = useToast()
 	return (
 		<>
 			<div className='border-b flex p-2 gap-x-2'>
@@ -103,18 +115,102 @@ export default function UserPost() {
 							</CardContent>
 						</Card>
 					)}
+					{mediaFiles.length > 0 && (
+						<div className='flex flex-wrap gap-2 justify-center'>
+							{mediaFiles.map((file, index) => (
+								<div
+									key={file.name}
+									className='relative w-52 h-52'
+								>
+									<Image
+										src={URL.createObjectURL(
+											file
+										)}
+										alt={file.name}
+										className='rounded-md'
+										layout='fill'
+									/>
+									<button
+										className='absolute -top-2 -right-2 rounded-full bg-red-500 text-white font-bold h-7 w-7'
+										onClick={() => {
+											setMediaFiles((prev) =>
+												prev.filter(
+													(_, i) =>
+														i !==
+														index
+												)
+											)
+										}}
+									>
+										X
+									</button>
+								</div>
+							))}
+						</div>
+					)}
 					<div className='flex items-start'>
 						<ReplayToPostPopover />
 					</div>
 					<Separator />
 					<div className='flex items-center justify-between'>
 						<div className='flex items-center gap-x-2'>
-							<UserPostIcon
-								label='Media'
-								onClick={() => {}}
-								Icon={ImagePlus}
-								disabled={poll !== null}
+							<label htmlFor='media'>
+								<Wrapper
+									disabled={
+										mediaFiles.length >= 2 ||
+										poll != null
+									}
+									label='Media'
+								>
+									<div
+										className={cn(
+											'hover:bg-primary/20 text-primary rounded-full p-2 transition-all cursor-pointer',
+											(mediaFiles.length >=
+												2 ||
+												poll != null) &&
+												'text-primary/20 hover:bg-transparent cursor-default'
+										)}
+									>
+										<ImagePlus />
+									</div>
+								</Wrapper>
+							</label>
+							<input
+								type='file'
+								className='hidden'
+								name='media'
+								id='media'
+								multiple
+								accept='image/*'
+								onChange={(e) => {
+									if (e.target.files) {
+										const files = Array.from(
+											e.target.files
+										)
+										if (
+											files.length +
+												mediaFiles.length >
+											2
+										) {
+											toast({
+												title: 'You can only upload 2 images at a time',
+												description:
+													'Upgrade to premium to upload more images at a time',
+											})
+										} else {
+											setMediaFiles((prev) => [
+												...prev,
+												...files,
+											])
+										}
+									}
+								}}
+								disabled={
+									mediaFiles.length >= 2 ||
+									poll != null
+								}
 							/>
+
 							<UserPostIcon
 								label='Poll'
 								onClick={() => {
@@ -132,7 +228,10 @@ export default function UserPost() {
 										})
 									}
 								}}
-								disabled={poll !== null}
+								disabled={
+									poll !== null ||
+									mediaFiles.length > 0
+								}
 								Icon={List}
 							/>
 							<UserPostIcon
