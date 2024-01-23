@@ -30,7 +30,14 @@ export type User = {
 	updated_at: string
 }
 
-export type Media = {}
+export type Media = {
+	id: number
+	post_id: number
+	path: string
+	type: 'image' | 'video'
+	created_at: string
+	updated_at: string
+}
 
 export type Question = {
 	id: number

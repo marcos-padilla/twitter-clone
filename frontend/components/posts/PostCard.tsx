@@ -68,13 +68,16 @@ export default function PostCard({ post }: { post: PostWithUser }) {
 					{post.poll && <PollQuestions poll={post.poll} />}
 					{post.media.length > 0 && (
 						<div className='flex justify-center'>
-							<Image
-								alt={'Post image'}
-								src={'/post-test-image.jpg'}
-								width={300}
-								height={300}
-								className='rounded-md mt-5'
-							/>
+							{post.media.map((media) => (
+								<div key={media.id}>
+									<Image
+										src={media.path}
+										alt={'Post media'}
+										width={500}
+										height={500}
+									/>
+								</div>
+							))}
 						</div>
 					)}
 					<div className='flex justify-between mt-5'>
