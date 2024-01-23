@@ -1,4 +1,5 @@
 import ProtectedRoute from '@/components/ProtectedRoute'
+import ScrollToTopButton from '@/components/ScrollToTopButton'
 import Sidebar from '@/components/Sidebar'
 
 export default function ApplicationLayout({
@@ -9,7 +10,10 @@ export default function ApplicationLayout({
 	return (
 		<ProtectedRoute>
 			<Sidebar />
-			<main className='md:ml-52 ml-20 transition-all'>{children}</main>
+			<main className='md:ml-52 ml-20 transition-all mb-16'>
+				{children}
+			</main>
+			<ScrollToTopButton />
 		</ProtectedRoute>
 	)
 }
