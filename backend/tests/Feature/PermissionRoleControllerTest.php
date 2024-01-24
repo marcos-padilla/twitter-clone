@@ -174,4 +174,60 @@ class PermissionRoleControllerTest extends TestCase
                'message' => 'You cannot update the admin role'
           ]);
      }
+
+     public function test_can_delete_role(): void
+     {
+          $user = User::factory()->create();
+          $user->roles()->attach(Role::where('name', 'admin')->first());
+
+          $role = Role::factory()->create();
+
+          $response = $this->actingAs($user)->deleteJson('/api/roles/' . $role->id);
+          $response->assertStatus(200);
+          $response->assertJson([
+               'message' => 'Role deleted successfully',
+          ]);
+
+          $this->assertDatabaseMissing('roles', [
+               'id' => $role->id,
+          ]);
+     }
+
+     public function test_cannot_delete_role_without_permission(): void
+     {
+          $user = User::factory()->create();
+          $role = Role::factory()->create();
+
+          $response = $this->actingAs($user)->deleteJson('/api/roles/' . $role->id);
+
+          $response->assertStatus(403);
+          $response->assertJson([
+               'message' => 'You do not have permission to delete a role'
+          ]);
+     }
+
+     public function test_cannot_delete_admin_role(): void
+     {
+          $user = User::factory()->create();
+          $user->roles()->attach(Role::where('name', 'admin')->first());
+
+          $role = Role::where('name', 'admin')->first();
+
+          $response = $this->actingAs($user)->deleteJson('/api/roles/' . $role->id);
+
+          $response->assertStatus(403);
+          $response->assertJson([
+               'message' => 'You cannot delete the admin role'
+          ]);
+     }
+
+     public function test_cannot_delete_unexisting_role(): void
+     {
+          $user = User::factory()->create();
+          $user->roles()->attach(Role::where('name', 'admin')->first());
+
+          $response = $this->actingAs($user)->deleteJson('/api/roles/999');
+
+          $response->assertStatus(404);
+     }
 }

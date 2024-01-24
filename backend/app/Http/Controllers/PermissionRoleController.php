@@ -67,4 +67,22 @@ class PermissionRoleController extends Controller
             'role' => $role
         ]);
     }
+
+    public function destroyRole(Request $request, Role $role)
+    {
+        if (!$request->user()->hasPermission('create-role')) {
+            return response()->json([
+                'message' => 'You do not have permission to delete a role'
+            ], 403);
+        }
+        if ($role->name === 'admin') {
+            return response()->json([
+                'message' => 'You cannot delete the admin role'
+            ], 403);
+        }
+        $role->delete();
+        return response()->json([
+            'message' => 'Role deleted successfully'
+        ]);
+    }
 }
