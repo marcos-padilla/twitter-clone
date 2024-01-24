@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateAvatarRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Post;
@@ -52,12 +53,8 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    public function updateAvatar(Request $request)
+    public function updateAvatar(UpdateAvatarRequest $request)
     {
-        $request->validate([
-            'image' => 'image|max:1024'
-        ]);
-
         /** @var \App\Models\User */
         $user = auth()->user();
         if ($user->image_path) {
