@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SignInRequest;
+use App\Http\Requests\SignUpRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,29 +16,17 @@ class AuthController extends Controller
     {
     }
 
-    public function signUp(Request $request)
+    public function signUp(SignUpRequest $request)
     {
-        $attributes = $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:20|unique:users,username',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|confirmed|min:8',
-        ]);
-
         /** @var \App\Models\User */
-        $user = User::create($attributes);
+        $user = User::create($request->validated());
         return response()->json($user, 201);
     }
 
-    public function signIn(Request $request)
+    public function signIn(SignInRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string']
-        ]);
 
-
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($request->validated())) {
             /** @var \App\Models\User $user */
             $user = Auth::user();
             $token = $user->createToken('auth-token')->plainTextToken;
