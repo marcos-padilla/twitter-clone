@@ -84,6 +84,11 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'follows', 'follows_id', 'user_id');
     }
 
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
     public function isFollowing(User $user): bool
     {
         return $this->following->contains($user);
@@ -125,5 +130,17 @@ class User extends Authenticatable
     public function receivedMessages()
     {
         return $this->hasMany(Message::class, 'to_id');
+    }
+
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
+
+    public function hasPermission($permission)
+    {
+        return $this->roles()->whereHas('permissions', function ($query) use ($permission) {
+            $query->where('name', $permission);
+        })->exists();
     }
 }
