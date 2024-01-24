@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlockUserController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\MessageController;
@@ -49,4 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
      Route::apiResource('/roles', RoleController::class)->except(['index', 'show']);
      Route::post('/roles/{role}/assign', [RoleController::class, 'assignRole']);
+
+     Route::get('/block-users', [BlockUserController::class, 'index']);
+     Route::post('/block-users/{user}', [BlockUserController::class, 'store']);
 });

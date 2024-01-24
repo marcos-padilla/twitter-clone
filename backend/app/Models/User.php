@@ -94,6 +94,11 @@ class User extends Authenticatable
         return $this->roles()->with('permissions')->get()->pluck('permissions')->flatten()->pluck('name')->unique();
     }
 
+    public function blockedUsers()
+    {
+        return $this->belongsToMany(User::class, 'blocks', 'user_id', 'blocked_user_id');
+    }
+
     public function isFollowing(User $user): bool
     {
         return $this->following->contains($user);

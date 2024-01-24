@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdateAvatarRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Post;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
