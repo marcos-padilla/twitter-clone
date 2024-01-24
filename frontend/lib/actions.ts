@@ -79,3 +79,8 @@ export const unfollowUser = async (userId: number) => {
 	const res = await sendRequest('DELETE', `/follow/${userId}`)
 	return res.data
 }
+
+export const getUser = async (username: string) => {
+	const res = await sendRequest('GET', `/user/${username}`)
+	return res.data
+}

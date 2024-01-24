@@ -13,6 +13,7 @@ import { Button } from './ui/button'
 import { followUser, unfollowUser } from '@/lib/actions'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
+import Link from 'next/link'
 
 export default function UserTooltip({ user: userProp }: { user: User }) {
 	const { data } = useSession()
@@ -22,12 +23,15 @@ export default function UserTooltip({ user: userProp }: { user: User }) {
 			<Tooltip>
 				<TooltipTrigger>
 					<div className='flex items-center gap-x-2'>
-						<span className='font-bold hover:underline flex'>
+						<Link
+							href={`/users/${user.username}`}
+							className='font-bold hover:underline flex'
+						>
 							{user.name}
 							<span className='text-primary'>
 								<BadgeCheck size={13} strokeWidth={3} />
 							</span>
-						</span>
+						</Link>
 						<span className='text-muted-foreground'>
 							@{user.username}
 						</span>
