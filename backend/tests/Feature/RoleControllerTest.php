@@ -114,6 +114,10 @@ class PermissionRoleControllerTest extends TestCase
 
           $roleData = [
                'name' => 'Updated Role',
+               'permissions' => [
+                    'create-role',
+                    'assign-role'
+               ]
           ];
 
           $response = $this->actingAs($user)->putJson('/api/roles/' . $role->id, $roleData);
@@ -165,6 +169,10 @@ class PermissionRoleControllerTest extends TestCase
 
           $roleData = [
                'name' => 'Updated Role',
+               'permissions' => [
+                    'create-role',
+                    'assign-role'
+               ]
           ];
 
           $response = $this->actingAs($user)->putJson('/api/roles/' . $role->id, $roleData);

@@ -7,7 +7,9 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PermissionRoleController;
 use App\Http\Controllers\PollController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Models\Permission;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,8 +47,6 @@ Route::middleware('auth:sanctum')->group(function () {
      Route::post('/message/{user}', [MessageController::class, 'sendMessage']);
      Route::get('/message/{user}', [MessageController::class, 'index']);
 
-     Route::post('/roles', [PermissionRoleController::class, 'createRole']);
-     Route::put('/roles/{role}', [PermissionRoleController::class, 'updateRole']);
-     Route::delete('/roles/{role}', [PermissionRoleController::class, 'destroyRole']);
-     Route::post('/roles/{role}/assign', [PermissionRoleController::class, 'assignRole']);
+     Route::apiResource('/roles', RoleController::class)->except(['index', 'show']);
+     Route::post('/roles/{role}/assign', [RoleController::class, 'assignRole']);
 });

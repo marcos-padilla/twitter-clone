@@ -2,26 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Permission;
 use App\Models\Role;
+use App\Http\Requests\StoreRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class PermissionRoleController extends Controller
+class RoleController extends Controller
 {
-    public function createRole(Request $request)
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
     {
+        //
+    }
 
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreRoleRequest $request)
+    {
         if (!$request->user()->hasPermission('create-role')) {
             return response()->json([
                 'message' => 'You do not have permission to create a role'
             ], 403);
         }
-        $request->validate([
-            'name' => 'required|string|unique:roles,name',
-            'permissions' => 'required|array',
-            'permissions.*' => 'required|string|exists:permissions,name'
-        ]);
+        $request->validate([]);
 
         $role = Role::create([
             'name' => $request->name
@@ -36,7 +44,11 @@ class PermissionRoleController extends Controller
         ]);
     }
 
-    public function updateRole(Request $request, Role $role)
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateRoleRequest $request, Role $role)
     {
         if (!$request->user()->hasPermission('create-role')) {
             return response()->json([
@@ -48,11 +60,6 @@ class PermissionRoleController extends Controller
                 'message' => 'You cannot update the admin role'
             ], 403);
         }
-        $request->validate([
-            'name' => 'required|string|unique:roles,name,' . $role->id,
-            'permissions' => 'required|array',
-            'permissions.*' => 'required|string|exists:permissions,name'
-        ]);
 
         $role->update([
             'name' => $request->name
@@ -69,7 +76,10 @@ class PermissionRoleController extends Controller
         ]);
     }
 
-    public function destroyRole(Request $request, Role $role)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request, Role $role)
     {
         if (!$request->user()->hasPermission('delete-role')) {
             return response()->json([
