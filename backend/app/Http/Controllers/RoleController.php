@@ -24,13 +24,6 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $request)
     {
-        if (!$request->user()->hasPermission('create-role')) {
-            return response()->json([
-                'message' => 'You do not have permission to create a role'
-            ], 403);
-        }
-        $request->validate([]);
-
         $role = Role::create([
             'name' => $request->name
         ]);
@@ -50,16 +43,7 @@ class RoleController extends Controller
      */
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        if (!$request->user()->hasPermission('create-role')) {
-            return response()->json([
-                'message' => 'You do not have permission to update a role'
-            ], 403);
-        }
-        if ($role->name === 'admin') {
-            return response()->json([
-                'message' => 'You cannot update the admin role'
-            ], 403);
-        }
+        $this->authorize('update', $role);
 
         $role->update([
             'name' => $request->name
@@ -81,16 +65,7 @@ class RoleController extends Controller
      */
     public function destroy(Request $request, Role $role)
     {
-        if (!$request->user()->hasPermission('delete-role')) {
-            return response()->json([
-                'message' => 'You do not have permission to delete a role'
-            ], 403);
-        }
-        if ($role->name === 'admin') {
-            return response()->json([
-                'message' => 'You cannot delete the admin role'
-            ], 403);
-        }
+        $this->authorize('delete', $role);
         $role->delete();
         return response()->json([
             'message' => 'Role deleted successfully'
@@ -99,11 +74,8 @@ class RoleController extends Controller
 
     public function assignRole(Request $request, Role $role)
     {
-        if (!$request->user()->hasPermission('assign-role')) {
-            return response()->json([
-                'message' => 'You do not have permission to assign a role'
-            ], 403);
-        }
+        $this->authorize('assignRole', $role);
+
         $request->validate([
             'user_id' => 'required|exists:users,id',
         ]);

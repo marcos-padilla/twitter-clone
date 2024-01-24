@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class PermissionRoleControllerTest extends TestCase
+class RoleControllerTest extends TestCase
 {
      use DatabaseTransactions;
 
@@ -300,6 +300,31 @@ class PermissionRoleControllerTest extends TestCase
 
           $response->assertStatus(422);
           $response->assertJsonValidationErrors(['user_id']);
+
+          $this->assertDatabaseMissing('role_user', [
+               'role_id' => $role->id,
+               'user_id' => $requestData['user_id'],
+          ]);
+     }
+
+     public function test_cannot_assign_admin_role(): void
+     {
+          $user = User::factory()->create();
+          $user->roles()->attach(Role::where('name', 'admin')->first());
+
+          $user2 = User::factory()->create();
+          $role = Role::where('name', 'admin')->first();
+
+          $requestData = [
+               'user_id' => $user2->id,
+          ];
+
+          $response = $this->actingAs($user)->postJson('/api/roles/' . $role->id . '/assign', $requestData);
+
+          $response->assertStatus(403);
+          $response->assertJson([
+               'message' => 'You cannot assign the admin role',
+          ]);
 
           $this->assertDatabaseMissing('role_user', [
                'role_id' => $role->id,

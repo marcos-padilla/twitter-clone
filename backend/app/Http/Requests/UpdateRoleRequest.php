@@ -11,7 +11,11 @@ class UpdateRoleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        /** 
+         * @var \App\Models\User $user
+         */
+        $user = auth()->user();
+        return $user->hasPermission('create-role');
     }
 
     /**
@@ -26,5 +30,16 @@ class UpdateRoleRequest extends FormRequest
             'permissions' => 'required|array',
             'permissions.*' => 'required|string|exists:permissions,name',
         ];
+    }
+
+    /**
+     * Handle a failed authorization attempt.
+     *
+     * @return void
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    protected function failedAuthorization()
+    {
+        throw new \Illuminate\Auth\Access\AuthorizationException('You do not have permission to update a role');
     }
 }
