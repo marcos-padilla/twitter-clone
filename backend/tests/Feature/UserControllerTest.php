@@ -48,7 +48,7 @@ class UserControllerTest extends TestCase
           $post2 = Post::factory()->create(['user_id' => $user->id]);
 
           $response = $this->actingAs($authUser)
-               ->getJson('/api/user/' . $user->id);
+               ->getJson('/api/user/' . $user->username);
 
           $response->assertStatus(200);
           $response->assertJson([
