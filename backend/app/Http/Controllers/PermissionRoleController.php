@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PermissionRoleController extends Controller
@@ -70,7 +71,7 @@ class PermissionRoleController extends Controller
 
     public function destroyRole(Request $request, Role $role)
     {
-        if (!$request->user()->hasPermission('create-role')) {
+        if (!$request->user()->hasPermission('delete-role')) {
             return response()->json([
                 'message' => 'You do not have permission to delete a role'
             ], 403);
@@ -83,6 +84,28 @@ class PermissionRoleController extends Controller
         $role->delete();
         return response()->json([
             'message' => 'Role deleted successfully'
+        ]);
+    }
+
+    public function assignRole(Request $request, Role $role)
+    {
+        if (!$request->user()->hasPermission('assign-role')) {
+            return response()->json([
+                'message' => 'You do not have permission to assign a role'
+            ], 403);
+        }
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $user = User::find($request->user_id);
+        $user->roles()->detach();
+        $user->roles()->attach(
+            $role
+        );
+
+        return response()->json([
+            'message' => 'Role assigned successfully'
         ]);
     }
 }

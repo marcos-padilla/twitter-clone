@@ -230,4 +230,72 @@ class PermissionRoleControllerTest extends TestCase
 
           $response->assertStatus(404);
      }
+
+     public function test_can_assign_role(): void
+     {
+          $user = User::factory()->create();
+          $user->roles()->attach(Role::where('name', 'admin')->first());
+
+          $role = Role::factory()->create();
+
+          $requestData = [
+               'user_id' => $user->id,
+          ];
+
+          $response = $this->actingAs($user)->postJson('/api/roles/' . $role->id . '/assign', $requestData);
+
+          $response->assertStatus(200);
+          $response->assertJson([
+               'message' => 'Role assigned successfully',
+          ]);
+
+          $this->assertDatabaseHas('role_user', [
+               'role_id' => $role->id,
+               'user_id' => $user->id,
+          ]);
+     }
+
+     public function test_cannot_assign_role_without_permission(): void
+     {
+          $user = User::factory()->create();
+          $role = Role::factory()->create();
+
+          $requestData = [
+               'user_id' => $user->id,
+          ];
+
+          $response = $this->actingAs($user)->postJson('/api/roles/' . $role->id . '/assign', $requestData);
+
+          $response->assertStatus(403);
+          $response->assertJson([
+               'message' => 'You do not have permission to assign a role',
+          ]);
+
+          $this->assertDatabaseMissing('role_user', [
+               'role_id' => $role->id,
+               'user_id' => $user->id,
+          ]);
+     }
+
+     public function test_cannot_assign_role_to_non_existing_user(): void
+     {
+          $user = User::factory()->create();
+          $user->roles()->attach(Role::where('name', 'admin')->first());
+
+          $role = Role::factory()->create();
+
+          $requestData = [
+               'user_id' => -1, // Non-existing user ID
+          ];
+
+          $response = $this->actingAs($user)->postJson('/api/roles/' . $role->id . '/assign', $requestData);
+
+          $response->assertStatus(422);
+          $response->assertJsonValidationErrors(['user_id']);
+
+          $this->assertDatabaseMissing('role_user', [
+               'role_id' => $role->id,
+               'user_id' => $requestData['user_id'],
+          ]);
+     }
 }
