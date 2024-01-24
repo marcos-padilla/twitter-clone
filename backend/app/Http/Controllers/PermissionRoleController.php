@@ -28,4 +28,25 @@ class PermissionRoleController extends Controller
             'role' => $role
         ]);
     }
+
+    public function updateRole(Request $request, Role $role)
+    {
+        if (!$request->user()->hasPermission('create-role')) {
+            return response()->json([
+                'message' => 'You do not have permission to update a role'
+            ], 403);
+        }
+        $request->validate([
+            'name' => 'required|string|unique:roles,name,' . $role->id
+        ]);
+
+        $role->update([
+            'name' => $request->name
+        ]);
+
+        return response()->json([
+            'message' => 'Role updated successfully',
+            'role' => $role
+        ]);
+    }
 }

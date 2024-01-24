@@ -46,4 +46,5 @@ Route::middleware('auth:sanctum')->group(function () {
      Route::get('/message/{user}', [MessageController::class, 'index']);
 
      Route::post('/roles', [PermissionRoleController::class, 'createRole']);
+     Route::put('/roles/{role}', [PermissionRoleController::class, 'updateRole']);
 });
