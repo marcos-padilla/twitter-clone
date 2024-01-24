@@ -18,6 +18,10 @@ class PermissionRoleControllerTest extends TestCase
 
           $roleData = [
                'name' => 'Test Role',
+               'permissions' => [
+                    'create-role',
+                    'assign-role'
+               ]
           ];
 
           $response = $this->actingAs($user)->postJson('/api/roles', $roleData);
@@ -29,7 +33,9 @@ class PermissionRoleControllerTest extends TestCase
                ],
           ]);
 
-          $this->assertDatabaseHas('roles', $roleData);
+          $this->assertDatabaseHas('roles', [
+               'name' => $roleData['name'],
+          ]);
      }
 
      public function test_cannot_create_role_with_existing_name(): void
@@ -41,6 +47,10 @@ class PermissionRoleControllerTest extends TestCase
 
           $roleData = [
                'name' => $existingRole->name,
+               'permissions' => [
+                    'create-role',
+                    'assign-role'
+               ]
           ];
 
           $response = $this->actingAs($user)->postJson('/api/roles', $roleData);
@@ -55,6 +65,10 @@ class PermissionRoleControllerTest extends TestCase
 
           $roleData = [
                'name' => 'Test Role',
+               'permissions' => [
+                    'create-role',
+                    'assign-role'
+               ]
           ];
 
           $response = $this->actingAs($user)->postJson('/api/roles', $roleData);
@@ -73,6 +87,10 @@ class PermissionRoleControllerTest extends TestCase
 
           $roleData = [
                'name' => 'Updated Role',
+               'permissions' => [
+                    'create-role',
+                    'assign-role'
+               ]
           ];
 
           $response = $this->actingAs($user)->putJson('/api/roles/' . $role->id, $roleData);
@@ -84,7 +102,9 @@ class PermissionRoleControllerTest extends TestCase
                ],
           ]);
 
-          $this->assertDatabaseHas('roles', $roleData);
+          $this->assertDatabaseHas('roles', [
+               'name' => $roleData['name'],
+          ]);
      }
 
      public function test_cannot_update_role_without_permission(): void
