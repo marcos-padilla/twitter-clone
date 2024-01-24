@@ -42,6 +42,11 @@ class PermissionRoleController extends Controller
                 'message' => 'You do not have permission to update a role'
             ], 403);
         }
+        if ($role->name === 'admin') {
+            return response()->json([
+                'message' => 'You cannot update the admin role'
+            ], 403);
+        }
         $request->validate([
             'name' => 'required|string|unique:roles,name,' . $role->id,
             'permissions' => 'required|array',

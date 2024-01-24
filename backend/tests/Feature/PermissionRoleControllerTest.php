@@ -155,4 +155,23 @@ class PermissionRoleControllerTest extends TestCase
 
           $response->assertStatus(404);
      }
+
+     public function test_cannot_update_admin_role(): void
+     {
+          $user = User::factory()->create();
+          $user->roles()->attach(Role::where('name', 'admin')->first());
+
+          $role = Role::where('name', 'admin')->first();
+
+          $roleData = [
+               'name' => 'Updated Role',
+          ];
+
+          $response = $this->actingAs($user)->putJson('/api/roles/' . $role->id, $roleData);
+
+          $response->assertStatus(403);
+          $response->assertJson([
+               'message' => 'You cannot update the admin role'
+          ]);
+     }
 }
