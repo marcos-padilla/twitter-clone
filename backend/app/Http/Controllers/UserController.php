@@ -20,8 +20,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function show(User $user)
+    public function show($username)
     {
+        $user = User::where('username', $username)->firstOrFail();
         $posts = $user->posts()->orderBy('is_pinned', 'desc')->get();
         return response()->json([
             'user' => $user,
