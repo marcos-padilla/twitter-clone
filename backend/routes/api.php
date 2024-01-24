@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\PermissionRoleController;
 use App\Http\Controllers\PollController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
@@ -43,4 +44,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
      Route::post('/message/{user}', [MessageController::class, 'sendMessage']);
      Route::get('/message/{user}', [MessageController::class, 'index']);
+
+     Route::post('/roles', [PermissionRoleController::class, 'createRole']);
 });
