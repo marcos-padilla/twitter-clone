@@ -23,10 +23,11 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@/components/ui/form'
-import axios from 'axios'
 import { useToast } from '@/components/ui/use-toast'
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
+import { axiosInstance } from '@/lib/axiosInstance'
+import { route } from '@/lib/utils'
 
 const signUpFormSchema = z.object({
 	name: z.string().min(1, { message: 'Full name is required' }),
@@ -82,7 +83,8 @@ export default function AuthPage() {
 	})
 
 	const onSignUp = (data: z.infer<typeof signUpFormSchema>) => {
-		axios.post('http://127.0.0.1:8000/api/sign-up', data)
+		axiosInstance
+			.post(route({ name: 'signup' }).url, data)
 			.then(() => {
 				toast({
 					title: 'Sign Up Success!!!',

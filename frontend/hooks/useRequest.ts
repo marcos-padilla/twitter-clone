@@ -1,6 +1,6 @@
 import { useToast } from '@/components/ui/use-toast'
+import { axiosInstance } from '@/lib/axiosInstance'
 import { HttpMethod } from '@/types'
-import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -36,7 +36,7 @@ export const useRequest = () => {
 	}) => {
 		setLoading(true)
 		try {
-			const res = await axios.request({
+			const res = await axiosInstance.request({
 				url: `${process.env.NEXT_PUBLIC_API_URL}${url}`,
 				method,
 				data: body,

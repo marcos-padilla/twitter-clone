@@ -1,7 +1,7 @@
 'use client'
 
 import { axiosInstance } from '@/lib/axiosInstance'
-import { cn } from '@/lib/utils'
+import { cn, route } from '@/lib/utils'
 import { PollInput, PostWithUser } from '@/types'
 import { CalendarClock, ImagePlus, List, LucideIcon, Smile } from 'lucide-react'
 import { useSession } from 'next-auth/react'
@@ -82,13 +82,19 @@ export default function UserPost() {
 			postData[`imagen${index + 1}`] = file
 		})
 		axiosInstance
-			.post('/posts', postData, {
-				headers: {
-					//@ts-ignore
-					Authorization: `Bearer ${data?.apiToken}`,
-					'Content-Type': 'multipart/form-data',
-				},
-			})
+			.post(
+				route({
+					name: 'posts.store',
+				}).url,
+				postData,
+				{
+					headers: {
+						//@ts-ignore
+						Authorization: `Bearer ${data?.apiToken}`,
+						'Content-Type': 'multipart/form-data',
+					},
+				}
+			)
 			.then((res) => {
 				setPostContent('')
 				setMediaFiles([])

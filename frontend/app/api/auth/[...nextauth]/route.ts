@@ -1,12 +1,13 @@
 import NextAuth from 'next-auth'
 import type { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import axios from 'axios'
+import { route } from '@/lib/utils'
+import { axiosInstance } from '@/lib/axiosInstance'
 
 const authenticate = async (email: string, password: string) => {
 	try {
-		const response = await axios.post(
-			'http://127.0.0.1:8000/api/sign-in',
+		const response = await axiosInstance.post(
+			route({ name: 'signin' }).url,
 			{ email, password },
 			{
 				headers: {
