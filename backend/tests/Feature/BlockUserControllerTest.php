@@ -51,4 +51,23 @@ class BlockUserControllerTest extends TestCase
                'blocked_user_id' => $user->id,
           ]);
      }
+
+     public function test_user_can_unblock_another_user(): void
+     {
+          $authUser = User::factory()->create();
+          $user = User::factory()->create();
+
+          $authUser->blockedUsers()->attach($user);
+
+          $response = $this->actingAs($authUser)
+               ->deleteJson('/api/block-users/' . $user->id);
+
+          $response->assertStatus(200);
+          $response->assertJson(['message' => 'User unblocked']);
+
+          $this->assertDatabaseMissing('blocks', [
+               'user_id' => $authUser->id,
+               'blocked_user_id' => $user->id,
+          ]);
+     }
 }

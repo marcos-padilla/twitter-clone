@@ -53,4 +53,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
      Route::get('/block-users', [BlockUserController::class, 'index']);
      Route::post('/block-users/{user}', [BlockUserController::class, 'store']);
+     Route::delete('/block-users/{user}', [BlockUserController::class, 'destroy']);
 });
