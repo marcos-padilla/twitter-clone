@@ -22,7 +22,6 @@ class AuthControllerTest extends TestCase
             'password' => 'password',
             'password_confirmation' => 'password'
         ]);
-
         $response->assertStatus(201);
         $response->assertJsonStructure([
             'name',
@@ -45,6 +44,11 @@ class AuthControllerTest extends TestCase
             'name' => 'Test User',
             'email' => 'test_from_phpunit@test.com',
             'username' => 'test_from_phpunit',
+        ]);
+
+        $id = $response->json('id');
+        $this->assertDatabaseHas('settings', [
+            'user_id' => $id,
         ]);
     }
 

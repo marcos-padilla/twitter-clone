@@ -9,6 +9,7 @@ use App\Http\Controllers\PermissionRoleController;
 use App\Http\Controllers\PollController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Models\Permission;
 use Illuminate\Support\Facades\Route;
@@ -54,4 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
      Route::get('/block-users', [BlockUserController::class, 'index']);
      Route::post('/block-users/{user}', [BlockUserController::class, 'store']);
      Route::delete('/block-users/{user}', [BlockUserController::class, 'destroy']);
+
+     Route::get('/settings', [SettingController::class, 'show']);
+     Route::put('/settings', [SettingController::class, 'update']);
 });

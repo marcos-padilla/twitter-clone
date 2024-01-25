@@ -54,6 +54,14 @@ class User extends Authenticatable
         'is_following'
     ];
 
+
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            $user->setting()->create([]);
+        });
+    }
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
@@ -93,6 +101,12 @@ class User extends Authenticatable
     {
         return $this->roles()->with('permissions')->get()->pluck('permissions')->flatten()->pluck('name')->unique();
     }
+
+    public function setting()
+    {
+        return $this->hasOne(Setting::class);
+    }
+
 
     public function blockedUsers()
     {
