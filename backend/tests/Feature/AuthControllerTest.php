@@ -15,7 +15,7 @@ class AuthControllerTest extends TestCase
      */
     public function test_can_register_user(): void
     {
-        $response = $this->postJson('/api/sign-up', [
+        $response = $this->postJson(route('signup'), [
             'name' => 'Test User',
             'email' => 'test_from_phpunit@test.com',
             'username' => 'test_from_phpunit',
@@ -54,7 +54,7 @@ class AuthControllerTest extends TestCase
 
     public function test_two_users_cannot_have_the_same_username(): void
     {
-        $this->postJson('/api/sign-up', [
+        $this->postJson(route('signup'), [
             'name' => 'Test User',
             'email' => 'test1@test.com',
             'username' => 'test',
@@ -62,7 +62,7 @@ class AuthControllerTest extends TestCase
             'password_confirmation' => 'password'
         ]);
 
-        $response = $this->postJson('/api/sign-up', [
+        $response = $this->postJson(route('signup'), [
             'name' => 'Test User',
             'email' => 'test2@test.com',
             'username' => 'test',
@@ -75,7 +75,7 @@ class AuthControllerTest extends TestCase
 
     public function test_two_users_cannot_have_the_same_email(): void
     {
-        $this->postJson('/api/sign-up', [
+        $this->postJson(route('signup'), [
             'name' => 'Test User',
             'email' => 'test@test.com',
             'username' => 'test1',
@@ -83,7 +83,7 @@ class AuthControllerTest extends TestCase
             'password_confirmation' => 'password'
         ]);
 
-        $response = $this->postJson('/api/sign-up', [
+        $response = $this->postJson(route('signup'), [
             'name' => 'Test User',
             'email' => 'test@test.com',
             'username' => 'test2',
@@ -96,7 +96,7 @@ class AuthControllerTest extends TestCase
 
     public function test_password_must_be_confirmed(): void
     {
-        $response = $this->postJson('/api/sign-up', [
+        $response = $this->postJson(route('signup'), [
             'name' => 'Test User',
             'email' => 'test@test.com',
             'username' => 'test2',
@@ -110,7 +110,7 @@ class AuthControllerTest extends TestCase
 
     public function test_password_must_be_greater_than_8_characters(): void
     {
-        $response = $this->postJson('/api/sign-up', [
+        $response = $this->postJson(route('signup'), [
             'name' => 'Test User',
             'email' => 'test@test.com',
             'username' => 'test2',
@@ -131,7 +131,7 @@ class AuthControllerTest extends TestCase
             'username' => 'test_from_phpunit'
         ]);
 
-        $response = $this->postJson('/api/sign-in', [
+        $response = $this->postJson(route('signin'), [
             'email' => 'test_from_phpunit@test.com',
             'password' => 'password'
         ]);
@@ -151,7 +151,7 @@ class AuthControllerTest extends TestCase
 
     public function test_cannot_sign_in_with_invalid_credentials(): void
     {
-        $response = $this->postJson('/api/sign-in', [
+        $response = $this->postJson(route('signin'), [
             'email' => 'test_from_phpunit@test.com',
             'password' => 'wrong_password'
         ]);

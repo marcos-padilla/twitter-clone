@@ -20,7 +20,9 @@ class FollowControllerTest extends TestCase
         $authUser = User::factory()->create();
 
         $response = $this->actingAs($authUser)
-            ->postJson("/api/follow/$user->id");
+            ->postJson(route('users.follow', [
+                'user' => $user->id
+            ]));
 
         $response->assertStatus(200)
             ->assertJson([
@@ -43,7 +45,9 @@ class FollowControllerTest extends TestCase
         $authUser->follow($user);
 
         $response = $this->actingAs($authUser)
-            ->post("/api/follow/$user->id");
+            ->post(route('users.follow', [
+                'user' => $user->id
+            ]));
 
         $response->assertStatus(409);
     }
@@ -58,7 +62,9 @@ class FollowControllerTest extends TestCase
         $authUser->follow($user);
 
         $response = $this->actingAs($authUser)
-            ->deleteJson("/api/follow/$user->id");
+            ->deleteJson(route('users.unfollow', [
+                'user' => $user->id
+            ]));
 
         $response->assertStatus(200)
             ->assertJson([
@@ -80,7 +86,9 @@ class FollowControllerTest extends TestCase
         $authUser = User::factory()->create();
 
         $response = $this->actingAs($authUser)
-            ->deleteJson("/api/follow/$user->id");
+            ->deleteJson(route('users.unfollow', [
+                'user' => $user->id
+            ]));
 
         $response->assertStatus(409);
     }
@@ -91,7 +99,9 @@ class FollowControllerTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)
-            ->postJson("/api/follow/$user->id");
+            ->postJson(route('users.follow', [
+                'user' => $user->id
+            ]));
 
         $response->assertStatus(409)
             ->assertJson([
@@ -104,7 +114,9 @@ class FollowControllerTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)
-            ->deleteJson("/api/follow/$user->id");
+            ->deleteJson(route('users.unfollow', [
+                'user' => $user->id
+            ]));
 
         $response->assertStatus(409)
             ->assertJson([

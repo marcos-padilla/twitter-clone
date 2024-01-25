@@ -37,15 +37,16 @@ Route::middleware('auth:sanctum')->group(function () {
           Route::get('/{user}/message', [MessageController::class, 'index'])->name('users.view-message');
      });
 
+     //Post Routes
+     Route::apiResource('/posts', PostController::class)->names([
+          'index' => 'posts.index',
+          'store' => 'posts.store',
+          'show' => 'posts.show',
+          'update' => 'posts.update',
+          'destroy' => 'posts.destroy',
+     ]);
+
      Route::prefix('posts')->group(function () {
-          //Post Routes
-          Route::apiResource('/', PostController::class)->names([
-               'index' => 'posts.index',
-               'store' => 'posts.store',
-               'show' => 'posts.show',
-               'update' => 'posts.update',
-               'destroy' => 'posts.destroy',
-          ]);
           Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
 
           //Comment Routes
@@ -57,14 +58,12 @@ Route::middleware('auth:sanctum')->group(function () {
      Route::post('/polls/{poll}/vote', [PollController::class, 'vote'])->name('poll.vote');
 
      //Role Routes
-     Route::prefix('roles')->group(function () {
-          Route::apiResource('/', RoleController::class)->except(['index', 'show'])->names([
-               'store' => 'roles.store',
-               'update' => 'roles.update',
-               'destroy' => 'roles.destroy',
-          ]);
-          Route::post('/{role}/assign', [RoleController::class, 'assignRole'])->name('roles.assign');
-     });
+     Route::apiResource('/roles', RoleController::class)->except(['index', 'show'])->names([
+          'store' => 'roles.store',
+          'update' => 'roles.update',
+          'destroy' => 'roles.destroy',
+     ]);
+     Route::post('/roles/{role}/assign', [RoleController::class, 'assignRole'])->name('roles.assign');
 
      //Block User Routes
      Route::prefix('blocked-users')->group(function () {

@@ -18,7 +18,9 @@ class BlockUserControllerTest extends TestCase
           $user = User::factory()->create();
 
           $response = $this->actingAs($user)
-               ->postJson('/api/block-users/' . $admin->id);
+               ->postJson(route('blocked.store', [
+                    'user' => $admin->id
+               ]));
 
           $response->assertStatus(422);
           $response->assertJson(['message' => 'You cannot block an admin']);
@@ -29,7 +31,9 @@ class BlockUserControllerTest extends TestCase
           $user = User::factory()->create();
 
           $response = $this->actingAs($user)
-               ->postJson('/api/block-users/' . $user->id);
+               ->postJson(route('blocked.store', [
+                    'user' => $user->id
+               ]));
 
           $response->assertStatus(422);
           $response->assertJson(['message' => 'You cannot block yourself']);
@@ -41,7 +45,9 @@ class BlockUserControllerTest extends TestCase
           $user = User::factory()->create();
 
           $response = $this->actingAs($authUser)
-               ->postJson('/api/block-users/' . $user->id);
+               ->postJson(route('blocked.store', [
+                    'user' => $user->id
+               ]));
 
           $response->assertStatus(200);
           $response->assertJson(['message' => 'User blocked']);
@@ -60,7 +66,9 @@ class BlockUserControllerTest extends TestCase
           $authUser->blockedUsers()->attach($user);
 
           $response = $this->actingAs($authUser)
-               ->deleteJson('/api/block-users/' . $user->id);
+               ->deleteJson(route('blocked.destroy', [
+                    'user' => $user->id
+               ]));
 
           $response->assertStatus(200);
           $response->assertJson(['message' => 'User unblocked']);

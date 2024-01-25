@@ -20,7 +20,7 @@ class UserControllerTest extends TestCase
           $post2 = Post::factory()->create(['user_id' => $user->id]);
 
           $response = $this->actingAs($user)
-               ->getJson('/api/user');
+               ->getJson(route('users.show-authenticated-user'));
 
           $response->assertStatus(200);
           $response->assertJson([

@@ -144,7 +144,9 @@ class PostControllerTest extends TestCase
         $post = Post::factory()->create();
 
         $response = $this->actingAs($user)
-            ->getJson('/api/posts/' . $post->id);
+            ->getJson(route('posts.show', [
+                'post' => $post->id
+            ]));
 
         $response->assertStatus(200);
         $response->assertJson([
@@ -164,7 +166,9 @@ class PostControllerTest extends TestCase
         $post = Post::factory()->create();
 
         $response = $this->actingAs($user)
-            ->postJson('/api/posts/' . $post->id . '/like');
+            ->postJson(route('posts.like', [
+                'post' => $post->id
+            ]));
 
         $response->assertStatus(200);
         $response->assertJson([
@@ -181,7 +185,9 @@ class PostControllerTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-            ->postJson('/api/posts/' . $post->id . '/like');
+            ->postJson(route('posts.like', [
+                'post' => $post->id
+            ]));
 
         $response->assertStatus(200);
         $response->assertJson([

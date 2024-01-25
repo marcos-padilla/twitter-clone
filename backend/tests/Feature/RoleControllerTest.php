@@ -93,7 +93,9 @@ class RoleControllerTest extends TestCase
                ]
           ];
 
-          $response = $this->actingAs($user)->putJson('/api/roles/' . $role->id, $roleData);
+          $response = $this->actingAs($user)->putJson(route('roles.update', [
+               'role' => $role->id
+          ]), $roleData);
           $response->assertStatus(200);
           $response->assertJson([
                'message' => 'Role updated successfully',
@@ -120,7 +122,9 @@ class RoleControllerTest extends TestCase
                ]
           ];
 
-          $response = $this->actingAs($user)->putJson('/api/roles/' . $role->id, $roleData);
+          $response = $this->actingAs($user)->putJson(route('roles.update', [
+               'role' => $role->id
+          ]), $roleData);
 
           $response->assertStatus(403);
           $response->assertJson([
@@ -140,7 +144,9 @@ class RoleControllerTest extends TestCase
                'name' => $existingRole->name,
           ];
 
-          $response = $this->actingAs($user)->putJson('/api/roles/' . $role->id, $roleData);
+          $response = $this->actingAs($user)->putJson(route('roles.update', [
+               'role' => $role->id
+          ]), $roleData);
 
           $response->assertStatus(422);
           $response->assertJsonValidationErrors(['name']);
@@ -155,7 +161,9 @@ class RoleControllerTest extends TestCase
                'name' => 'Updated Role',
           ];
 
-          $response = $this->actingAs($user)->putJson('/api/roles/999', $roleData);
+          $response = $this->actingAs($user)->putJson(route('roles.update', [
+               'role' => 999
+          ]), $roleData);
 
           $response->assertStatus(404);
      }
@@ -175,7 +183,9 @@ class RoleControllerTest extends TestCase
                ]
           ];
 
-          $response = $this->actingAs($user)->putJson('/api/roles/' . $role->id, $roleData);
+          $response = $this->actingAs($user)->putJson(route('roles.update', [
+               'role' => $role->id
+          ]), $roleData);
 
           $response->assertStatus(403);
           $response->assertJson([
@@ -190,7 +200,9 @@ class RoleControllerTest extends TestCase
 
           $role = Role::factory()->create();
 
-          $response = $this->actingAs($user)->deleteJson('/api/roles/' . $role->id);
+          $response = $this->actingAs($user)->deleteJson(route('roles.destroy', [
+               'role' => $role->id
+          ]));
           $response->assertStatus(200);
           $response->assertJson([
                'message' => 'Role deleted successfully',
@@ -206,7 +218,9 @@ class RoleControllerTest extends TestCase
           $user = User::factory()->create();
           $role = Role::factory()->create();
 
-          $response = $this->actingAs($user)->deleteJson('/api/roles/' . $role->id);
+          $response = $this->actingAs($user)->deleteJson(route('roles.destroy', [
+               'role' => $role->id
+          ]));
 
           $response->assertStatus(403);
           $response->assertJson([
@@ -221,7 +235,9 @@ class RoleControllerTest extends TestCase
 
           $role = Role::where('name', 'admin')->first();
 
-          $response = $this->actingAs($user)->deleteJson('/api/roles/' . $role->id);
+          $response = $this->actingAs($user)->deleteJson(route('roles.destroy', [
+               'role' => $role->id
+          ]));
 
           $response->assertStatus(403);
           $response->assertJson([
@@ -234,7 +250,9 @@ class RoleControllerTest extends TestCase
           $user = User::factory()->create();
           $user->roles()->attach(Role::where('name', 'admin')->first());
 
-          $response = $this->actingAs($user)->deleteJson('/api/roles/999');
+          $response = $this->actingAs($user)->deleteJson(route('roles.destroy', [
+               'role' => 999
+          ]));
 
           $response->assertStatus(404);
      }
@@ -250,7 +268,9 @@ class RoleControllerTest extends TestCase
                'user_id' => $user->id,
           ];
 
-          $response = $this->actingAs($user)->postJson('/api/roles/' . $role->id . '/assign', $requestData);
+          $response = $this->actingAs($user)->postJson(route('roles.assign', [
+               'role' => $role->id
+          ]), $requestData);
 
           $response->assertStatus(200);
           $response->assertJson([
@@ -272,7 +292,9 @@ class RoleControllerTest extends TestCase
                'user_id' => $user->id,
           ];
 
-          $response = $this->actingAs($user)->postJson('/api/roles/' . $role->id . '/assign', $requestData);
+          $response = $this->actingAs($user)->postJson(route('roles.assign', [
+               'role' => $role->id
+          ]), $requestData);
 
           $response->assertStatus(403);
           $response->assertJson([
@@ -296,7 +318,9 @@ class RoleControllerTest extends TestCase
                'user_id' => -1, // Non-existing user ID
           ];
 
-          $response = $this->actingAs($user)->postJson('/api/roles/' . $role->id . '/assign', $requestData);
+          $response = $this->actingAs($user)->postJson(route('roles.assign', [
+               'role' => $role->id
+          ]), $requestData);
 
           $response->assertStatus(422);
           $response->assertJsonValidationErrors(['user_id']);
@@ -319,7 +343,9 @@ class RoleControllerTest extends TestCase
                'user_id' => $user2->id,
           ];
 
-          $response = $this->actingAs($user)->postJson('/api/roles/' . $role->id . '/assign', $requestData);
+          $response = $this->actingAs($user)->postJson(route('roles.assign', [
+               'role' => $role->id
+          ]), $requestData);
 
           $response->assertStatus(403);
           $response->assertJson([

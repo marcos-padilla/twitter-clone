@@ -18,7 +18,9 @@ class MessageControllerTest extends TestCase
         $sender = User::factory()->create();
         $receiver = User::factory()->create();
 
-        $response = $this->actingAs($sender)->postJson("/api/message/$receiver->id", [
+        $response = $this->actingAs($sender)->postJson(route('users.send-message', [
+            'user' => $receiver->id
+        ]), [
             'message' => 'Hello World',
         ]);
 
@@ -36,15 +38,21 @@ class MessageControllerTest extends TestCase
         $sender = User::factory()->create();
         $receiver = User::factory()->create();
 
-        $this->actingAs($sender)->postJson("/api/message/$receiver->id", [
+        $this->actingAs($sender)->postJson(route('users.send-message', [
+            'user' => $receiver->id
+        ]), [
             'message' => 'Hello Reciever',
         ]);
 
-        $this->actingAs($receiver)->postJson("/api/message/$sender->id", [
+        $this->actingAs($receiver)->postJson(route('users.send-message', [
+            'user' => $sender->id
+        ]), [
             'message' => 'Hello Sender',
         ]);
 
-        $response = $this->actingAs($sender)->getJson("/api/message/$receiver->id");
+        $response = $this->actingAs($sender)->getJson(route('users.view-message', [
+            'user' => $receiver->id
+        ]));
 
         $response->assertStatus(200);
 
