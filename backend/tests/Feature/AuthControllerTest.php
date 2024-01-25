@@ -161,31 +161,4 @@ class AuthControllerTest extends TestCase
             'message' => 'Invalid Credentials'
         ]);
     }
-
-    /*   public function test_can_sign_out(): void
-    {
-        $user = User::create([
-            'name' => 'Test User',
-            'email' => 'test@test.com',
-            'password' => 'password',
-            'username' => 'test'
-        ]);;
-
-        $this->postJson('/api/sign-in', [
-            'email' => 'test@test.com',
-            'password' => 'password'
-        ]);
-        $response = $this->actingAs($user)->postJson('/api/sign-out');
-        $response->dd();
-        $response->assertStatus(200);
-        $response->assertJson([
-            'message' => 'Signed out'
-        ]);
-
-        $this->assertDatabaseMissing('personal_access_tokens', [
-            'tokenable_id' => $user->id,
-            'tokenable_type' => User::class,
-            'name' => 'test-token',
-        ]);
-    } */
 }
