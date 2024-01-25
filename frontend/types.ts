@@ -1,7 +1,9 @@
 import { sidebarItems } from './lib/constants'
+import { routes } from './lib/routes'
 
 export type SidebarItem = (typeof sidebarItems)[number]
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
+export type RouteName = keyof typeof routes
 
 export type PollInput = {
 	questions: {
