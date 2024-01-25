@@ -41,12 +41,14 @@ export const sendRequest = async ({
 
 export const getPosts = async (page: string = '1') => {
 	const res = await sendRequest(
-		route({
-			name: 'posts.index',
-			searchQuery: {
-				page,
+		route(
+			{
+				name: 'posts.index',
 			},
-		})
+			{
+				page,
+			}
+		)
 	)
 	return res.data
 }
