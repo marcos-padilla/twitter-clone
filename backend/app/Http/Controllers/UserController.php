@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    public function me(Request $request)
+    public function showAuthenticatedUser(Request $request)
     {
         $user = $request->user();
         $posts = $user->posts()->orderBy('is_pinned', 'desc')->get();
@@ -20,7 +20,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function show($username)
+    public function showByUsername($username)
     {
         $user = User::where('username', $username)->firstOrFail();
         $posts = $user->posts()->orderBy('is_pinned', 'desc')->get();

@@ -5,57 +5,77 @@ use App\Http\Controllers\BlockUserController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\PermissionRoleController;
 use App\Http\Controllers\PollController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
-use App\Models\Permission;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+//Authentication Routes
+Route::prefix('auth')->group(function () {
+     Route::post('/signup', [AuthController::class, 'signUp'])->name('signup');
+     Route::post('/signin', [AuthController::class, 'signIn'])->name('signin');
+     Route::post('/signout', [AuthController::class, 'signOut'])->middleware('auth:sanctum')->name('signout');
+});
 
-Route::post('/sign-up', [AuthController::class, 'signUp']);
-Route::post('/sign-in', [AuthController::class, 'signIn']);
 Route::middleware('auth:sanctum')->group(function () {
-     Route::post('/sign-out', [AuthController::class, 'signOut']);
 
-     Route::get('/user', [UserController::class, 'me']);
-     Route::get('/user/{username}', [UserController::class, 'show']);
-     Route::put('/user', [UserController::class, 'update']);
-     Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
+     Route::prefix('user')->group(function () {
+          //User Routes
+          Route::get('/me', [UserController::class, 'showAuthenticatedUser'])->name('users.show-authenticated-user');
+          Route::get('/{username}', [UserController::class, 'showByUsername'])->name('users.show-by-username');
+          Route::put('/', [UserController::class, 'update'])->name('users.update');
+          Route::post('/avatar', [UserController::class, 'updateAvatar'])->name('users.update-avatar');
 
-     Route::apiResource('/posts', PostController::class);
-     Route::post('/posts/{post}/like', [PostController::class, 'like']);
+          //Follow Routes
+          Route::post('/{user}/follow/', [FollowController::class, 'follow'])->name('users.follow');
+          Route::delete('/{user}/unfollow/', [FollowController::class, 'unfollow'])->name('users.unfollow');
 
-     Route::post('/polls/{poll}/vote', [PollController::class, 'vote']);
+          //Message Routes
+          Route::post('/{user}/message', [MessageController::class, 'sendMessage'])->name('users.send-message');
+          Route::get('/{user}/message', [MessageController::class, 'index'])->name('users.view-message');
+     });
 
-     Route::post('/posts/{post}/comments', [CommentController::class, 'store']);
-     Route::delete('/posts/{post}/comments/{comment}', [CommentController::class, 'destroy']);
+     Route::prefix('posts')->group(function () {
+          //Post Routes
+          Route::apiResource('/', PostController::class)->names([
+               'index' => 'posts.index',
+               'store' => 'posts.store',
+               'show' => 'posts.show',
+               'update' => 'posts.update',
+               'destroy' => 'posts.destroy',
+          ]);
+          Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
 
-     Route::post('/follow/{user}', [FollowController::class, 'follow']);
-     Route::delete('/follow/{user}', [FollowController::class, 'unfollow']);
+          //Comment Routes
+          Route::post('/{post}/comments', [CommentController::class, 'store'])->name('posts.comments.store');
+          Route::delete('/{post}/comments/{comment}', [CommentController::class, 'destroy'])->name('posts.comments.destroy');
+     });
 
-     Route::post('/message/{user}', [MessageController::class, 'sendMessage']);
-     Route::get('/message/{user}', [MessageController::class, 'index']);
+     //Poll Route
+     Route::post('/polls/{poll}/vote', [PollController::class, 'vote'])->name('poll.vote');
 
-     Route::apiResource('/roles', RoleController::class)->except(['index', 'show']);
-     Route::post('/roles/{role}/assign', [RoleController::class, 'assignRole']);
+     //Role Routes
+     Route::prefix('roles')->group(function () {
+          Route::apiResource('/', RoleController::class)->except(['index', 'show'])->names([
+               'store' => 'roles.store',
+               'update' => 'roles.update',
+               'destroy' => 'roles.destroy',
+          ]);
+          Route::post('/{role}/assign', [RoleController::class, 'assignRole'])->name('roles.assign');
+     });
 
-     Route::get('/block-users', [BlockUserController::class, 'index']);
-     Route::post('/block-users/{user}', [BlockUserController::class, 'store']);
-     Route::delete('/block-users/{user}', [BlockUserController::class, 'destroy']);
+     //Block User Routes
+     Route::prefix('blocked-users')->group(function () {
+          Route::get('/', [BlockUserController::class, 'index'])->name('blocked.index');
+          Route::post('/{user}', [BlockUserController::class, 'store'])->name('blocked.store');
+          Route::delete('/{user}', [BlockUserController::class, 'destroy'])->name('blocked.destroy');
+     });
 
-     Route::get('/settings', [SettingController::class, 'show']);
-     Route::put('/settings', [SettingController::class, 'update']);
+     //Settings Routes
+     Route::prefix('settings')->group(function () {
+          Route::get('/', [SettingController::class, 'show'])->name('settings.show');
+          Route::put('/', [SettingController::class, 'update'])->name('settings.update');
+     });
 });
