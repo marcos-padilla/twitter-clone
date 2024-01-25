@@ -20,9 +20,15 @@ for line in lines:
           and elem != '\r'
      ]
      if len(split_line) >= 4:
+          if split_line[0] == 'GET|HEAD':
+               split_line[0] = 'GET'
+          if split_line[0] == 'POST|HEAD':
+               split_line[0] = 'POST'
+          if split_line[0] == 'PUT|PATCH':
+               split_line[0] = 'PUT'
           routes.append({
                'method': split_line[0],
-               'uri': split_line[1],
+               'url': split_line[1],
                'name': split_line[2],
           })
 
@@ -34,6 +40,6 @@ with open(frontend_routes_file, 'w') as f:
      for route in routes:
           f.write(f'     "{route["name"]}": {{\n')
           f.write(f'          method: "{route["method"]}",\n')
-          f.write(f'          uri: "{route["uri"]}",\n')
+          f.write(f'          url: "{route["url"]}",\n')
           f.write(f'     }},\n')
      f.write('} as const\n')

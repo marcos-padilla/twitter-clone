@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { routes } from './routes'
-import { RouteName } from '@/types'
+import { HttpMethod, RouteName } from '@/types'
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -16,20 +16,35 @@ export function getAvatarFallback(name: string | null | undefined) {
 		.join('')
 }
 
-export function route(
-	name: RouteName,
-	params?: Record<string, string | number>
-) {
+export function route({
+	name,
+	params,
+	searchQuery,
+}: {
+	name: RouteName
+	params?: Record<string, any>
+	searchQuery?: Record<string, string>
+}) {
 	const route = routes[name]
 	if (!route) throw new Error(`Route ${name} not found`)
-	let uri = route.uri as RouteName
+	let url = route.url as RouteName
 	if (params) {
 		for (const [key, value] of Object.entries(params)) {
-			uri = (uri as string).replace(
-				`{${key}}`,
-				value.toString()
-			) as RouteName
+			if (value === null) {
+				url = (url as string).replace(`{${key}}`, '') as RouteName
+			} else {
+				url = (url as string).replace(
+					`{${key}}`,
+					value.toString()
+				) as RouteName
+			}
 		}
 	}
-	return uri
+	if (searchQuery) {
+		url = url + '?' + new URLSearchParams(searchQuery).toString()
+	}
+	return {
+		method: route.method as HttpMethod,
+		url,
+	}
 }
