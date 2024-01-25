@@ -1,10 +1,9 @@
 'use server'
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { getServerSession } from 'next-auth'
 import axios from 'axios'
+import { getServerSession } from 'next-auth'
 import { revalidatePath } from 'next/cache'
-import { PollInput } from '@/types'
 
 export const serverSession = async () => {
 	return await getServerSession(authOptions)
