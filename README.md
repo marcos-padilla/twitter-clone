@@ -74,4 +74,8 @@ Welcome to the Social Network App repository! This full-stack application is bui
      npm run dev
      ```
 
-Access the application at: [http://localhost:3000](http://localhost:3000)
+## Develoeper Instructions
+- If you make any change in any endpoint, make sure tu run **sync-routes.py** script in order to keep synchronized routes between frontend and backend
+
+ 
+### Access the application at: [http://localhost:3000](http://localhost:3000)
