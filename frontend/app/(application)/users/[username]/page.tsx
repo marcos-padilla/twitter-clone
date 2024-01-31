@@ -8,6 +8,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { followUser, getUser, serverSession, unfollowUser } from '@/lib/actions'
+import { cn } from '@/lib/utils'
 import { Post, User } from '@/types'
 import {
 	Copy,
@@ -107,13 +108,18 @@ export default async function UserPage({
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
-				<Button
-					variant='outline'
-					className='rounded-full'
-					size={'icon'}
+				<Link
+					href={`/chat/${user.username}`}
+					className={cn(
+						buttonVariants({
+							variant: 'outline',
+							size: 'icon',
+						}),
+						'rounded-full'
+					)}
 				>
 					<MessageCircle />
-				</Button>
+				</Link>
 				<FollowButton authUserId={id} user={user} />
 			</div>
 		</main>

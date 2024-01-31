@@ -19,7 +19,7 @@ class MessageControllerTest extends TestCase
         $receiver = User::factory()->create();
 
         $response = $this->actingAs($sender)->postJson(route('users.send-message', [
-            'user' => $receiver->id
+            'username' => $receiver->username
         ]), [
             'message' => 'Hello World',
         ]);
@@ -39,19 +39,19 @@ class MessageControllerTest extends TestCase
         $receiver = User::factory()->create();
 
         $this->actingAs($sender)->postJson(route('users.send-message', [
-            'user' => $receiver->id
+            'username' => $receiver->username
         ]), [
             'message' => 'Hello Reciever',
         ]);
 
         $this->actingAs($receiver)->postJson(route('users.send-message', [
-            'user' => $sender->id
+            'username' => $sender->username
         ]), [
             'message' => 'Hello Sender',
         ]);
 
         $response = $this->actingAs($sender)->getJson(route('users.view-message', [
-            'user' => $receiver->id
+            'username' => $receiver->username
         ]));
 
         $response->assertStatus(200);

@@ -12,8 +12,9 @@ use Illuminate\Support\Facades\Auth;
 class MessageController extends Controller
 {
 
-    public function index(User $user)
+    public function index($username)
     {
+        $user = User::where('username', $username)->firstOrFail();
         $messages = Message::where(function ($query) use ($user) {
             $query->where('sender_id', Auth::id())
                 ->where('receiver_id', $user->id);
@@ -27,8 +28,9 @@ class MessageController extends Controller
         ]);
     }
 
-    public function sendMessage(StoreMessageRequest $request, User $user)
+    public function sendMessage(StoreMessageRequest $request, $username)
     {
+        $user = User::where('username', $username)->firstOrFail();
         $message = Message::create([
             'sender_id' => Auth::id(),
             'receiver_id' => $user->id,

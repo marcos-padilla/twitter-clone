@@ -10,9 +10,7 @@ export default function ApplicationLayout({
 	return (
 		<ProtectedRoute>
 			<Sidebar />
-			<main className='md:ml-52 ml-20 transition-all mb-16'>
-				{children}
-			</main>
+			<main className='md:ml-52 ml-20 transition-all'>{children}</main>
 			<ScrollToTopButton />
 		</ProtectedRoute>
 	)

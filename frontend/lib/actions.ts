@@ -152,3 +152,31 @@ export const getUser = async (username: string) => {
 	})
 	return res.data
 }
+
+export const getChat = async (username: string) => {
+	const res = await sendRequest(
+		route({
+			name: 'users.view-message',
+			params: {
+				username,
+			},
+		})
+	)
+
+	return res.data.data
+}
+
+export const sendMessage = async (username: string, message: string) => {
+	const res = await sendRequest({
+		...route({
+			name: 'users.send-message',
+			params: {
+				username,
+			},
+		}),
+		body: {
+			message,
+		},
+	})
+	return res.data.data
+}

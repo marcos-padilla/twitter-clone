@@ -99,17 +99,17 @@ export const routes = {
 		method: 'GET',
 		url: 'api/user/{username}',
 	},
-	'users.follow': {
-		method: 'POST',
-		url: 'api/user/{user}/follow',
-	},
 	'users.send-message': {
 		method: 'POST',
-		url: 'api/user/{user}/message',
+		url: 'api/user/{username}/message',
 	},
 	'users.view-message': {
 		method: 'GET',
-		url: 'api/user/{user}/message',
+		url: 'api/user/{username}/message',
+	},
+	'users.follow': {
+		method: 'POST',
+		url: 'api/user/{user}/follow',
 	},
 	'users.unfollow': {
 		method: 'DELETE',
@@ -238,19 +238,19 @@ export type Route =
 			}
 	  }
 	| {
-			name: 'users.follow'
-			params: {
-				user: any
-			}
-	  }
-	| {
 			name: 'users.send-message'
 			params: {
-				user: any
+				username: any
 			}
 	  }
 	| {
 			name: 'users.view-message'
+			params: {
+				username: any
+			}
+	  }
+	| {
+			name: 'users.follow'
 			params: {
 				user: any
 			}

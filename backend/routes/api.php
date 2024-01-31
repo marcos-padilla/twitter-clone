@@ -35,8 +35,8 @@ Route::middleware('auth:sanctum')->group(function () {
           Route::delete('/{user}/unfollow/', [FollowController::class, 'unfollow'])->name('users.unfollow');
 
           //Message Routes
-          Route::post('/{user}/message', [MessageController::class, 'sendMessage'])->name('users.send-message');
-          Route::get('/{user}/message', [MessageController::class, 'index'])->name('users.view-message');
+          Route::post('/{username}/message', [MessageController::class, 'sendMessage'])->name('users.send-message');
+          Route::get('/{username}/message', [MessageController::class, 'index'])->name('users.view-message');
      });
 
      //Post Routes

@@ -81,3 +81,15 @@ export type Post = {
 export type PostWithUser = Post & {
 	user: User
 }
+
+export type Message = {
+	id: number
+	sender_id: number
+	receiver_id: number
+	message: string
+	is_owner: boolean
+	sender: User
+	receiver: User
+	created_at: string
+	updated_at: string
+}
