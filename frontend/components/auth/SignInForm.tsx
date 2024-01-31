@@ -15,6 +15,7 @@ import { useToast } from '../ui/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn } from 'next-auth/react'
 import { Button } from '../ui/button'
+import { useEffect } from 'react'
 
 const signInFormSchema = z.object({
 	email: z
@@ -24,7 +25,13 @@ const signInFormSchema = z.object({
 	password: z.string().min(1, { message: 'Password is required' }),
 })
 
-export default function SignInForm() {
+export default function SignInForm({
+	error,
+	callbackUrl,
+}: {
+	error?: string
+	callbackUrl?: string
+}) {
 	const { toast } = useToast()
 
 	const signInForm = useForm({
@@ -36,16 +43,23 @@ export default function SignInForm() {
 	})
 
 	const onSignIn = (data: z.infer<typeof signInFormSchema>) => {
-		try {
-			signIn('credentials', {
-				email: data.email,
-				password: data.password,
-				callbackUrl: '/home',
-			})
-		} catch (e) {
+		signIn('credentials', {
+			email: data.email,
+			password: data.password,
+			callbackUrl: callbackUrl || '/home',
+		}).catch((e) => {
 			console.log({ e })
-		}
+		})
 	}
+
+	useEffect(() => {
+		if (error) {
+			toast({
+				title: 'Error',
+				description: error,
+			})
+		}
+	}, [error, toast])
 	return (
 		<Form {...signInForm}>
 			<form

@@ -39,6 +39,19 @@ export const sendRequest = async ({
 	return res
 }
 
+export const isAuthenticated = async () => {
+	try {
+		await sendRequest(
+			route({
+				name: 'valid-token',
+			})
+		)
+		return true
+	} catch (e) {
+		return false
+	}
+}
+
 export const getPosts = async (page: string = '1') => {
 	const res = await sendRequest(
 		route(
@@ -85,8 +98,6 @@ export const likePost = async (formData: FormData) => {
 		)
 		return res.data
 	} catch (e) {
-		console.log(e)
-
 		revalidatePath('/')
 	}
 }

@@ -76,6 +76,11 @@ export const authOptions: AuthOptions = {
 			return token
 		},
 	},
+	pages: {
+		signIn: '/auth',
+		error: '/auth',
+		newUser: '/new-user',
+	},
 }
 
 const handler = NextAuth(authOptions)

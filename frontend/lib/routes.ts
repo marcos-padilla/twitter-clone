@@ -115,6 +115,10 @@ export const routes = {
 		method: 'DELETE',
 		url: 'api/user/{user}/unfollow',
 	},
+	'valid-token': {
+		method: 'GET',
+		url: 'api/valid-token',
+	},
 } as const
 
 export type Route =
@@ -256,4 +260,7 @@ export type Route =
 			params: {
 				user: any
 			}
+	  }
+	| {
+			name: 'valid-token'
 	  }

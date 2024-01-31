@@ -1,13 +1,5 @@
-'use client'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { redirect } from 'next/navigation'
 
 export default function InitPage() {
-	const router = useRouter()
-
-	useEffect(() => {
-		router.push('/home')
-	}, [router])
-
-	return null
+	return redirect('/home')
 }

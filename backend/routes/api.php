@@ -21,6 +21,8 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
 
+     Route::get('/valid-token', [AuthController::class, 'validToken'])->name('valid-token');
+
      Route::prefix('user')->group(function () {
           //User Routes
           Route::get('/me', [UserController::class, 'showAuthenticatedUser'])->name('users.show-authenticated-user');
