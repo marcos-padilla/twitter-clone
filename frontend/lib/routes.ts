@@ -131,6 +131,12 @@ export type Route =
 			name: 'blocked.index'
 	  }
 	| {
+			name: 'blocked.store'
+			params: {
+				user: any
+			}
+	  }
+	| {
 			name: 'blocked.destroy'
 			params: {
 				user: any
