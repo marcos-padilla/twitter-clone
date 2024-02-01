@@ -3,7 +3,6 @@ import InfiniteScrollPosts from './InfiniteScrollPosts'
 
 export default async function Posts() {
 	const posts = await getPosts()
-
 	return (
 		<InfiniteScrollPosts
 			initialPosts={posts.data}

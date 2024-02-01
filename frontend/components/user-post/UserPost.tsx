@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Separator } from '../ui/separator'
 import { useToast } from '../ui/use-toast'
 import ProgressiveCircularBar from './ProgressiveCircularBar'
+import { revalidatePath } from 'next/cache'
 
 const MAX_POST_CONTENT = 200
 

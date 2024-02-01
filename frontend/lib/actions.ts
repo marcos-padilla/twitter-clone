@@ -2,10 +2,11 @@
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { HttpMethod } from '@/types'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { getServerSession } from 'next-auth'
 import { revalidatePath } from 'next/cache'
 import { route } from './utils'
+import { redirect } from 'next/navigation'
 
 export const serverSession = async () => {
 	return await getServerSession(authOptions)
@@ -22,21 +23,28 @@ export const sendRequest = async ({
 	body?: any
 	headers?: any
 }) => {
-	const session = await serverSession()
-	//@ts-ignore
-	const token = session?.apiToken
+	try {
+		const session = await serverSession()
+		//@ts-ignore
+		const token = session?.apiToken
 
-	const res = await axios.request({
-		url: `${process.env.NEXT_PUBLIC_API_URL}${url}`,
-		method,
-		data: body,
-		headers: {
-			Authorization: `Bearer ${token}`,
-			...headers,
-		},
-	})
+		const res = await axios.request({
+			url: `${process.env.NEXT_PUBLIC_API_URL}${url}`,
+			method,
+			data: body,
+			headers: {
+				Authorization: `Bearer ${token}`,
+				...headers,
+			},
+		})
 
-	return res
+		return res
+	} catch (e) {
+		if ((e as AxiosError).code === 'ECONNREFUSED') {
+			return redirect('/server-down')
+		}
+		throw e
+	}
 }
 
 export const isAuthenticated = async () => {

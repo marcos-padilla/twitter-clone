@@ -1,23 +1,15 @@
-'use client'
+import { isAuthenticated } from '@/lib/actions'
+import { redirect } from 'next/navigation'
 
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
-
-export default function ProtectedRoute({
+export default async function ProtectedRoute({
 	children,
 }: {
 	children: React.ReactNode
 }) {
-	/* const { status } = useSession()
-	const router = useRouter()
+	const isUserAuthenticated = await isAuthenticated()
 
-	useEffect(() => {
-		if (status === 'unauthenticated') {
-			router.push('/auth')
-		}
-	}, [status, router])
-	if (status === 'loading' || status === 'unauthenticated')
-		return <div>Loadsing...</div> */
-	return children
+	if (!isUserAuthenticated) {
+		return redirect('/auth')
+	}
+	return <>{children}</>
 }
