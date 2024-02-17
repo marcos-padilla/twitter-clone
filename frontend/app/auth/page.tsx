@@ -16,7 +16,7 @@ export default async function AuthPage({
 }) {
 	const res = await isAuthenticated()
 	if (res) {
-		return redirect('/home')
+		return redirect('/app/home')
 	}
 
 	return (
